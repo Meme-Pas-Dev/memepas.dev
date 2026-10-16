@@ -1,0 +1,5 @@
+# Les moteurs de recherche et les robots des assistants IA sont les bienvenus.
+User-agent: *
+Allow: /
+
+Sitemap: https://memepas.dev/sitemap.xml

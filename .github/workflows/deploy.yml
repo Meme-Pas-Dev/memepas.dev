@@ -1,0 +1,67 @@
+name: Déploiement
+
+# Construit le site et le déploie sur Cloudflare. Tourne uniquement dans le dépôt public :
+# à chaque étiquette de version, chaque nuit (pour reprendre les dernières versions des
+# applications) et à la demande.
+on:
+  push:
+    tags: ["v*"]
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'Meme-Pas-Dev/memepas.dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version-file: .nvmrc
+      - run: npm ci --ignore-scripts
+      - run: npm run check
+      - name: Construction (versions lues dans l'API GitHub)
+        run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: site
+          path: |
+            build
+            worker
+            wrangler.jsonc
+            package.json
+            package-lock.json
+            .nvmrc
+          include-hidden-files: true
+          retention-days: 3
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    # Seules les tâches de cet environnement lisent les secrets Cloudflare.
+    environment: release
+    steps:
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
+        with:
+          name: site
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version-file: .nvmrc
+      - run: npm ci --ignore-scripts
+      - name: Déploiement sur Cloudflare
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

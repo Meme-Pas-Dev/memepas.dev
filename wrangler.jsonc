@@ -1,0 +1,22 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "memepas-dev",
+	"main": "worker/index.ts",
+	"compatibility_date": "2025-09-01",
+	// Les pages sont des fichiers statiques (dossier build/ produit par SvelteKit).
+	// Le Worker n'intervient que pour la racine (choix de la langue) et /.well-known/ ;
+	// tout le reste est servi directement.
+	"assets": {
+		"directory": "./build",
+		"binding": "ASSETS",
+		"html_handling": "auto-trailing-slash",
+		"not_found_handling": "404-page",
+		"run_worker_first": ["/", "/.well-known/*"]
+	},
+	// Pas de journalisation des requêtes.
+	"observability": { "enabled": false },
+	// Aucune adresse *.workers.dev : le site n'est joignable que par ses domaines personnalisés,
+	// déclarés dans le tableau de bord Cloudflare (Settings → Domains & Routes).
+	"workers_dev": false,
+	"preview_urls": false
+}
