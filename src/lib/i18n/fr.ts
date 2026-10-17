@@ -154,7 +154,7 @@ export const fr = {
 		privacy: [
 			'Aucun compte, aucun formulaire, aucune mesure d’audience. Polices, images et scripts sont servis par le site lui-même.',
 			'Comme tout hébergeur, Cloudflare traite des données techniques de connexion (dont l’adresse IP) pour acheminer les pages et protéger le service contre les abus. L’éditeur n’a accès qu’aux statistiques globales qu’en tire Cloudflare (nombre de requêtes, robots d’indexation…), sans aucun suivi individuel des visiteurs ; la journalisation des requêtes est désactivée.',
-			'Cloudflare ajoute aussi d’office deux éléments sur lesquels l’éditeur n’a pas la main : des en-têtes « NEL » (Network Error Logging), qui demandent à votre navigateur de signaler à Cloudflare les échecs de connexion au site, jamais les visites réussies, afin de détecter les pannes du réseau ; et un script de détection des robots, que la politique de sécurité du site empêche de s’exécuter.',
+			'Cloudflare ajoute aussi d’office deux éléments sur lesquels l’éditeur n’a pas la main : des en-têtes « NEL » (Network Error Logging), qui demandent à votre navigateur de signaler à Cloudflare les échecs de connexion au site, jamais les visites réussies, afin de détecter les pannes du réseau ; et un script de détection des robots, que la politique de sécurité du site empêche de s’exécuter. Cloudflare peut aussi demander à certains navigateurs de lui signaler les scripts chargés par la page, afin de détecter une éventuelle modification malveillante.',
 			'Les boutons de téléchargement mènent aux fichiers publiés sur GitHub (GitHub, Inc.) : en cliquant, vous quittez ce site et la politique de confidentialité de GitHub s’applique.',
 			'Si vous écrivez par e-mail, votre message sert uniquement à vous répondre. Vous disposez des droits prévus par le RGPD et pouvez adresser une réclamation à la CNIL.'
 		],
@@ -162,8 +162,9 @@ export const fr = {
 			'Ce site ne dépose aucun cookie et n’utilise aucun traceur ; aucune bannière de consentement n’est donc nécessaire. Le thème clair ou sombre suit les réglages de votre système ; si vous le changez, ce choix est conservé dans votre navigateur uniquement, sans jamais être transmis.',
 		accessibilityText:
 			'Ce site vise le niveau AA des WCAG 2.2 : navigation au clavier, contrastes suffisants dans les deux thèmes, textes alternatifs. Un obstacle ?',
-		accessibilityLink: 'Signalez-le sur GitHub',
+		accessibilityLink: 'Signalez-le par e-mail',
 		credits: [
+			'Code du site : licence MIT, hors noms, logos, icônes, captures d’écran et images d’aperçu',
 			'Polices : Bricolage Grotesque, Geist et Inter — SIL Open Font License',
 			'Icônes : Lucide — licence ISC',
 			'Applications : licence propre à chaque logiciel (Quayline : GNU GPL version 3 ou ultérieure)'

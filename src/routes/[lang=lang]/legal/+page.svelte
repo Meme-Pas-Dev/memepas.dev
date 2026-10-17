@@ -62,7 +62,7 @@
 
 			<section id="accessibilite" class="card">
 				<h2>{s.accessibility}</h2>
-				<p>{d.legal.accessibilityText} <a href="{site.repository}/issues">{d.legal.accessibilityLink}</a>.</p>
+				<p>{d.legal.accessibilityText} <a href="mailto:{site.contactEmail}">{d.legal.accessibilityLink}</a>.</p>
 			</section>
 
 			<section id="credits" class="card">

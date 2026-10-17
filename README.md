@@ -45,6 +45,18 @@ Chaque version du site est une étiquette `vX.Y.Z` de ce dépôt ; le site est a
 reconstruit chaque nuit pour reprendre les dernières versions des applications. Le
 journal des modifications est dans [CHANGELOG.md](CHANGELOG.md).
 
+## Licence
+
+Le code du site est publié sous [licence MIT](LICENSE). Les noms Meme-Pas-Dev et des
+applications, les logos, les icônes, les captures d'écran et les images d'aperçu en sont
+exclus. Les polices et icônes tierces gardent leur propre licence.
+
+## Contact
+
+Les issues ne sont pas ouvertes sur ce dépôt. Pour toute remarque sur le site (contenu,
+accessibilité, erreur) : [contact@memepas.dev](mailto:contact@memepas.dev). Les retours
+sur une application se font dans le dépôt de l'application.
+
 ## Sécurité
 
 Voir [SECURITY.md](SECURITY.md).

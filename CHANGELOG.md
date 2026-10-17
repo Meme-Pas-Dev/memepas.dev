@@ -1,5 +1,22 @@
 # Changelog / Journal des modifications
 
+## [1.0.1] - 2026-10-17
+
+### English
+
+- Site source code published under the MIT License; names, logos, icons,
+  screenshots and preview images are excluded.
+- Accessibility barriers are now reported by email.
+- Privacy policy: mention of the script monitoring performed by Cloudflare.
+
+### Français
+
+- Code source du site publié sous licence MIT ; noms, logos, icônes, captures d'écran
+  et images d'aperçu en sont exclus.
+- Les obstacles d'accessibilité se signalent désormais par e-mail.
+- Politique de confidentialité : mention de la surveillance des scripts effectuée par
+  Cloudflare.
+
 ## [1.0.0] - 2026-10-16
 
 ### English

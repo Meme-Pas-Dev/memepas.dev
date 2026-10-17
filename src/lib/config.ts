@@ -9,5 +9,5 @@ export const site = {
 		address: '101 Townsend St, San Francisco, CA 94107, USA'
 	},
 	/** Date de dernière mise à jour des informations légales (AAAA-MM-JJ). */
-	legalUpdated: '2026-10-16'
+	legalUpdated: '2026-10-17'
 };

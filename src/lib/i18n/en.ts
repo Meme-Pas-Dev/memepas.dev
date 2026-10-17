@@ -154,7 +154,7 @@ export const en: typeof fr = {
 		privacy: [
 			'No account, no form, no audience measurement. Fonts, images and scripts are served by the site itself.',
 			'Like any host, Cloudflare processes technical connection data (including the IP address) to deliver pages and protect the service against abuse. The publisher only has access to the aggregate statistics Cloudflare derives from it (number of requests, crawlers…), with no individual tracking of visitors; request logging is disabled.',
-			'Cloudflare also adds two things by default that the publisher does not control: “NEL” (Network Error Logging) headers, which ask your browser to report failed connections to the site to Cloudflare, never successful visits, in order to detect network outages; and a bot-detection script, which the site’s security policy prevents from running.',
+			'Cloudflare also adds two things by default that the publisher does not control: “NEL” (Network Error Logging) headers, which ask your browser to report failed connections to the site to Cloudflare, never successful visits, in order to detect network outages; and a bot-detection script, which the site’s security policy prevents from running. Cloudflare may also ask some browsers to report the scripts loaded by the page, in order to detect any malicious modification.',
 			'Download buttons lead to files published on GitHub (GitHub, Inc.): by clicking, you leave this site and GitHub’s privacy policy applies.',
 			'If you write by email, your message is only used to reply to you. You have the rights provided by the GDPR and may lodge a complaint with the CNIL (French data protection authority).'
 		],
@@ -162,8 +162,9 @@ export const en: typeof fr = {
 			'This site sets no cookies and uses no trackers, so no consent banner is needed. The light or dark theme follows your system settings; if you change it, the choice is kept in your browser only and never sent anywhere.',
 		accessibilityText:
 			'This site aims for WCAG 2.2 level AA: keyboard navigation, sufficient contrast in both themes, text alternatives. Found a barrier?',
-		accessibilityLink: 'Report it on GitHub',
+		accessibilityLink: 'Report it by email',
 		credits: [
+			'Site code: MIT License, excluding names, logos, icons, screenshots and preview images',
 			'Fonts: Bricolage Grotesque, Geist and Inter — SIL Open Font License',
 			'Icons: Lucide — ISC licence',
 			'Apps: each app has its own licence (Quayline: GNU GPL version 3 or later)'
