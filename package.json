@@ -2,7 +2,7 @@
   "name": "memepas-dev",
   "private": true,
   "license": "MIT",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "type": "module",
   "description": "Site memepas.dev : présentation et téléchargement des applications Meme-Pas-Dev",
   "engines": {

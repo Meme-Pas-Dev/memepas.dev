@@ -1,5 +1,17 @@
 # Changelog / Journal des modifications
 
+## [1.1.2] - 2026-10-17
+
+### English
+
+- Link preview images updated to the 1.1 design: pictograms, and the deep blue dark theme
+  for the Quayline page.
+
+### Français
+
+- Images d'aperçu des liens mises à jour selon la version 1.1 : pictos, et thème sombre
+  bleu nuit pour la page Quayline.
+
 ## [1.1.1] - 2026-10-17
 
 ### English
