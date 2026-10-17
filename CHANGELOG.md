@@ -1,5 +1,17 @@
 # Changelog / Journal des modifications
 
+## [1.0.2] - 2026-10-17
+
+### English
+
+- Navigation: on the home page, the active link follows the section being viewed
+  (Home, Apps, About); links no longer shift when the active one changes.
+
+### Français
+
+- Navigation : sur l'accueil, le lien actif suit la section affichée (Accueil,
+  Applications, À propos) ; les liens ne se décalent plus quand le lien actif change.
+
 ## [1.0.1] - 2026-10-17
 
 ### English

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { localize, t, unlocalize, type Lang } from '$lib/i18n';
 	import { apps } from '$lib/apps';
@@ -12,6 +13,41 @@
 	const otherHref = $derived(localize(otherLang, unlocalize(page.url.pathname)));
 	const current = $derived(unlocalize(page.url.pathname));
 	const onHome = $derived(current === '/');
+
+	// Sur l'accueil, le lien actif suit la section affichée (Accueil, Applications, À propos).
+	// Sans JavaScript, « Accueil » reste le lien actif de toute la page.
+	const sections = ['applications', 'pourquoi'] as const;
+	let section = $state<(typeof sections)[number] | null>(null);
+	onMount(() => {
+		let frame = 0;
+		const update = () => {
+			frame = 0;
+			if (!onHome) return (section = null);
+			const offset = Math.max((parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0) + 32, innerHeight * 0.35);
+			const atBottom = innerHeight + scrollY >= document.documentElement.scrollHeight - 2;
+			let found: typeof section = null;
+			for (const id of sections) {
+				const top = document.getElementById(id)?.getBoundingClientRect().top;
+				if (top !== undefined && (top <= offset + 1 || (atBottom && top < innerHeight))) found = id;
+			}
+			section = found;
+		};
+		const schedule = () => (frame ||= requestAnimationFrame(update));
+		addEventListener('scroll', schedule, { passive: true });
+		addEventListener('resize', schedule);
+		addEventListener('hashchange', schedule);
+		update();
+		return () => {
+			removeEventListener('scroll', schedule);
+			removeEventListener('resize', schedule);
+			removeEventListener('hashchange', schedule);
+			cancelAnimationFrame(frame);
+		};
+	});
+	$effect(() => {
+		if (!onHome) section = null;
+	});
+	const onApp = $derived(Object.keys(apps).some((slug) => current.startsWith(`/${slug}/`)));
 
 	// Sur l'accueil, « Accueil » remonte en haut de la page au lieu de la recharger.
 	// Sans JavaScript, le lien mène simplement à l'accueil.
@@ -34,15 +70,17 @@
 		<nav aria-label={d.nav.label}>
 			<ul>
 				<li>
-					<a href={localize(lang, '/')} aria-current={onHome ? 'page' : undefined} onclick={goHome}>{d.nav.home}</a>
+					<a href={localize(lang, '/')} data-label={d.nav.home} aria-current={onHome && !section ? 'page' : undefined} onclick={goHome}>{d.nav.home}</a>
 				</li>
 				<li>
-					<a href={localize(lang, '/#applications')} aria-current={Object.keys(apps).some((slug) => current.startsWith(`/${slug}/`)) ? 'page' : undefined}>{d.nav.apps}</a>
+					<a href={localize(lang, '/#applications')} data-label={d.nav.apps} aria-current={onApp ? 'page' : section === 'applications' ? 'location' : undefined}>{d.nav.apps}</a>
 				</li>
 				<li>
-					<a href={localize(lang, '/downloads/')} aria-current={current === '/downloads/' ? 'page' : undefined}>{d.nav.downloads}</a>
+					<a href={localize(lang, '/downloads/')} data-label={d.nav.downloads} aria-current={current === '/downloads/' ? 'page' : undefined}>{d.nav.downloads}</a>
 				</li>
-				<li><a href={localize(lang, '/#pourquoi')}>{d.nav.about}</a></li>
+				<li>
+					<a href={localize(lang, '/#pourquoi')} data-label={d.nav.about} aria-current={section === 'pourquoi' ? 'location' : undefined}>{d.nav.about}</a>
+				</li>
 			</ul>
 		</nav>
 		<div class="controls">
@@ -118,9 +156,24 @@
 	.lang:hover {
 		background: var(--chip);
 	}
-	nav a[aria-current='page'] {
+	nav a[aria-current] {
 		background: var(--chip);
 		font-weight: 600;
+	}
+	/* Réserve la largeur du texte en gras : le lien actif ne décale pas ses voisins. */
+	nav a {
+		flex-direction: column;
+		justify-content: center;
+	}
+	nav a::after {
+		content: attr(data-label);
+		content: attr(data-label) / '';
+		height: 0;
+		overflow: hidden;
+		visibility: hidden;
+		font-weight: 600;
+		user-select: none;
+		pointer-events: none;
 	}
 	.lang {
 		padding: 0 12px;
