@@ -70,7 +70,7 @@
 		gap: 10px;
 		font-size: 19px;
 		color: #ffffff;
-		--logo-bg: #23272e;
+		--logo-bg: var(--footer-logo);
 	}
 	ul {
 		display: flex;
@@ -96,7 +96,7 @@
 		justify-content: space-between;
 		gap: 16px;
 		padding-top: 24px;
-		border-top: 1px solid #2e3139;
+		border-top: 1px solid var(--footer-line);
 		font-size: 14px;
 	}
 	.bottom p {

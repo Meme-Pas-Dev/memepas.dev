@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import type { AppContent, Platform } from '$lib/apps/types';
 	import { t, type Lang } from '$lib/i18n';
+	import { icons } from '$lib/icons';
 	import { detectPlatform } from '$lib/os';
 	import CodeBlock from './CodeBlock.svelte';
 	import RichText from './RichText.svelte';
@@ -36,6 +37,7 @@
 {#if enhanced}
 	<div class="tablist" role="tablist" aria-label={d.app.systemTabs}>
 		{#each install as tab, i (tab.id)}
+			{@const Icon = icons[tab.icon]}
 			<button
 				bind:this={tabRefs[i]}
 				type="button"
@@ -45,7 +47,7 @@
 				aria-selected={selected === tab.id}
 				tabindex={selected === tab.id ? 0 : -1}
 				onclick={() => (selected = tab.id)}
-				onkeydown={(event) => onKeydown(event, i)}>{tab.label}</button
+				onkeydown={(event) => onKeydown(event, i)}><Icon size={16} strokeWidth={1.8} aria-hidden="true" />{tab.label}</button
 			>
 		{/each}
 	</div>
@@ -85,6 +87,9 @@
 		margin-bottom: 24px;
 	}
 	[role='tab'] {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
 		min-height: 40px;
 		padding: 0 16px;
 		border-radius: 9px;

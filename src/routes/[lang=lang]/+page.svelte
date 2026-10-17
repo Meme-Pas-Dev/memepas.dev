@@ -1,22 +1,27 @@
 <script lang="ts">
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
-	import Target from '@lucide/svelte/icons/target';
-	import CodeXml from '@lucide/svelte/icons/code-xml';
-	import ShieldCheck from '@lucide/svelte/icons/shield-check';
-	import Plus from '@lucide/svelte/icons/plus';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import { appList } from '$lib/apps';
 	import { screenshotSrcset, screenshotUrl } from '$lib/apps/types';
 	import { site } from '$lib/config';
 	import { localize, t } from '$lib/i18n';
+	import type { Picto as PictoSpec } from '$lib/icons';
 	import AppIcon from '$lib/components/AppIcon.svelte';
+	import Picto from '$lib/components/Picto.svelte';
 	import Seo from '$lib/components/Seo.svelte';
 	import { siteJsonLd } from '$lib/structured-data';
 
 	let { data } = $props();
 	const lang = $derived(data.lang);
 	const d = $derived(t(lang));
-	const principleIcons = [Target, CodeXml, ShieldCheck];
+	const principlePictos: PictoSpec[] = [
+		{ icon: 'target', tint: 'sand' },
+		{ icon: 'code-xml', tint: 'lilac' },
+		{ icon: 'shield-check', tint: 'mint' }
+	];
+	const whyPictos: PictoSpec[] = [
+		{ icon: 'sparkles', tint: 'lilac' },
+		{ icon: 'gift', tint: 'sand' }
+	];
 
 	// Capture de l'accueil : la première application qui en propose une.
 	const hero = $derived.by(() => {
@@ -78,9 +83,9 @@
 <section class="principles" aria-label={d.home.principlesLabel}>
 	<div class="container principles-grid">
 		{#each d.home.principles as principle, i (principle.title)}
-			{@const Icon = principleIcons[i]}
+			{@const picto = principlePictos[i]}
 			<div class="principle">
-				<span class="principle-icon"><Icon size={28} strokeWidth={1.8} /></span>
+				<Picto icon={picto.icon} tint={picto.tint} size="lg" />
 				<div>
 					<h2>{principle.title}</h2>
 					<p>{principle.text}</p>
@@ -121,19 +126,28 @@
 					</div>
 				</div>
 				<p class="app-card-text">{app.content[lang].card}</p>
+				<ul class="highlights">
+					{#each app.content[lang].highlights as highlight (highlight.label)}
+						<li><Picto icon={highlight.icon} tint={highlight.tint} size="sm" />{highlight.label}</li>
+					{/each}
+				</ul>
 				<span class="app-card-link">{d.home.discover} {app.name} →</span>
 			</a>
 		{/each}
 
 		<div class="placeholder">
-			<Plus size={28} strokeWidth={1.8} />
-			<h3>{d.home.nextTitle}</h3>
-			<p>{d.home.nextText}</p>
+			<Picto icon="plus" tint="lilac" size="lg" />
+			<div class="txt">
+				<h3>{d.home.nextTitle}</h3>
+				<p>{d.home.nextText}</p>
+			</div>
 		</div>
 		<div class="placeholder">
-			<ExternalLink size={28} strokeWidth={1.8} />
-			<h3>{d.home.githubTitle}</h3>
-			<p>{d.home.githubText} <a href={site.github}>github.com/Meme-Pas-Dev</a></p>
+			<Picto icon="folder-git" tint="mint" size="lg" />
+			<div class="txt">
+				<h3>{d.home.githubTitle}</h3>
+				<p>{d.home.githubText} <a href={site.github}>github.com/Meme-Pas-Dev</a></p>
+			</div>
 		</div>
 	</div>
 </section>
@@ -144,10 +158,17 @@
 		<h2 class="section-title">{d.home.whyTitle}</h2>
 	</div>
 	<div class="why-text">
-		{#each d.home.why as paragraph (paragraph)}
-			<p>{paragraph}</p>
+		{#each d.home.why as paragraph, i (paragraph)}
+			{@const picto = whyPictos[i]}
+			<div class="why-item">
+				{#if picto}<Picto icon={picto.icon} tint={picto.tint} />{/if}
+				<p>{paragraph}</p>
+			</div>
 		{/each}
-		<p class="disclaimer">{d.home.disclaimer}</p>
+		<div class="disclaimer">
+			<Picto icon="info" tint="mint" size="sm" />
+			<p>{d.home.disclaimer}</p>
+		</div>
 	</div>
 </section>
 
@@ -258,11 +279,8 @@
 	}
 	.principle {
 		display: flex;
+		align-items: flex-start;
 		gap: 16px;
-	}
-	.principle-icon {
-		flex: none;
-		color: var(--accent);
 	}
 	.principle h2 {
 		margin: 0 0 6px;
@@ -347,21 +365,43 @@
 		font-size: 15px;
 		flex: 1;
 	}
+	.highlights {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 16px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		font-size: 14px;
+		color: var(--muted);
+	}
+	.highlights li {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+	}
 	.app-card-link {
 		font-weight: 600;
 		font-size: 15px;
 		color: var(--accent);
 	}
+	/* Picto à gauche, texte à droite, le tout centré verticalement dans la carte. */
 	.placeholder {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		gap: 12px;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		align-content: center;
+		align-items: start;
+		gap: 18px;
 		min-height: 260px;
 		padding: 28px;
 		border: 1.5px dashed var(--line);
 		border-radius: 16px;
 		color: var(--muted);
+	}
+	.txt {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
 	}
 	.placeholder h3 {
 		margin: 0;
@@ -399,7 +439,15 @@
 	.why-text p {
 		margin: 0;
 	}
+	.why-item {
+		display: flex;
+		align-items: flex-start;
+		gap: 18px;
+	}
 	.disclaimer {
+		display: flex;
+		align-items: flex-start;
+		gap: 16px;
 		padding: 20px 24px;
 		border-radius: 12px;
 		background: var(--surface);

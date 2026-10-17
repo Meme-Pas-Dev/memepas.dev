@@ -1,8 +1,7 @@
 import type { Lang } from '$lib/i18n';
+import type { IconName, Picto } from '$lib/icons';
 
 export type Platform = 'linux' | 'macos' | 'windows';
-
-export type FeatureIcon = 'terminal' | 'edit' | 'vault' | 'key' | 'clock' | 'shield';
 
 /** Un fichier publié dans chaque release GitHub de l'application. */
 export interface ReleaseFileSpec {
@@ -14,6 +13,8 @@ export interface ReleaseFileSpec {
 	example: string;
 	/** Fichiers d'empreintes associés, publiés dans la même release. */
 	checksums: string[];
+	/** Picto du fichier (tableau des téléchargements, carte de téléchargement). */
+	picto: Picto;
 }
 
 export interface Screenshot {
@@ -32,18 +33,20 @@ export interface AppContent {
 	summary: string;
 	/** Texte court de la carte sur l'accueil. */
 	card: string;
+	/** Atouts affichés avec un picto sous le texte de la carte de l'accueil. */
+	highlights: (Picto & { label: string })[];
 	platforms: string;
-	badges: string[];
+	badges: { label: string; icon: IconName }[];
 	files: Record<string, { label: string; note: string }>;
 	smartscreen: string;
 	featuresTitle: string;
-	features: { icon: FeatureIcon; title: string; text: string }[];
+	features: (Picto & { title: string; text: string })[];
 	security: {
 		title: string;
 		intro: string;
-		chain: { label: string; detail?: string; highlight?: boolean }[];
+		chain: { label: string; detail?: string; highlight?: boolean; icon: IconName }[];
 		chainCaption: string;
-		points: { title: string; text: string }[];
+		points: (Picto & { title: string; text: string })[];
 		warning: string;
 		/** Lien vers la procédure à suivre en cas d'oubli du mot de passe. */
 		resetLink?: string;
@@ -51,7 +54,7 @@ export interface AppContent {
 		modelLink: string;
 		reportLink: string;
 	};
-	install: { id: string; label: string; platform: Platform; blocks: Block[] }[];
+	install: { id: string; label: string; platform: Platform; icon: IconName; blocks: Block[] }[];
 	privacy: string;
 	license: string;
 	screenshotAlt: string[];

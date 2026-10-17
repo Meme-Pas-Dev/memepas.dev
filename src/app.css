@@ -15,12 +15,23 @@
 	--btn: #15171c;
 	--btn-ink: #ffffff;
 	--footer: #15171c;
+	--footer-logo: #23272e;
+	--footer-line: #2e3139;
 	--code: #15171c;
 	--code-ink: #e6e8eb;
 	--warn: #fff4e0;
 	--warn-ink: #6b3f00;
 	--warn-line: #f1d3a1;
 	--shadow: 0 30px 60px -30px rgb(0 0 0 / 0.35);
+
+	--mint-bg: #e3f1ec;
+	--mint-fg: #0b6e5b;
+	--lilac-bg: #ebebfa;
+	--lilac-fg: #4a4fc0;
+	--sand-bg: #f6ecd9;
+	--sand-fg: #85570f;
+	--sky-bg: #e1edf7;
+	--sky-fg: #21608b;
 
 	--font-body: 'Geist Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
 	--font-display: 'Bricolage Grotesque Variable', var(--font-body);
@@ -29,59 +40,98 @@
 	color-scheme: light;
 }
 
-
 :root[data-theme='dark'] {
-	--bg: #0f1114;
-	--surface: #171a1f;
-	--ink: #ecedef;
-	--muted: #b9bdc5;
-	--subtle: #959ba5;
-	--line: #2a2e35;
-	--line-soft: #22262c;
-	--chip: #23272e;
-	--accent: #5cc9ae;
-	--on-accent: #0b1f1a;
-	--accent-soft: #143a31;
-	--accent-ink: #bfede1;
-	--btn: #ecedef;
-	--btn-ink: #0f1114;
-	--footer: #08090b;
-	--code: #0a0b0d;
-	--code-ink: #e6e8eb;
-	--warn: #3a2a10;
-	--warn-ink: #fad9a0;
-	--warn-line: #5c4318;
-	--shadow: 0 30px 60px -30px rgb(0 0 0 / 0.7);
-	--logo-bg: #23272e;
+	--bg: #0c1326;
+	--surface: #142043;
+	--ink: #e9edf9;
+	--muted: #c4cce4;
+	--subtle: #95a2c4;
+	--line: #223159;
+	--line-soft: #1b2850;
+	--chip: #1b2752;
+	--accent: #5fd8c2;
+	--on-accent: #08201b;
+	--accent-soft: #11373a;
+	--accent-ink: #9aead9;
+	--btn: #e9edf9;
+	--btn-ink: #0c1326;
+	--footer: #070d1c;
+	--footer-logo: #1b2752;
+	--footer-line: #1c2747;
+	--code: #091024;
+	--code-ink: #dfe5f5;
+	--warn: #33270f;
+	--warn-ink: #f6d697;
+	--warn-line: #5b4519;
+	--shadow: 0 30px 60px -30px rgb(0 0 0 / 0.75);
+	--logo-bg: #25356a;
+
+	--mint-bg: #11373a;
+	--mint-fg: #8fe8d6;
+	--lilac-bg: #232a5e;
+	--lilac-fg: #b7bdff;
+	--sand-bg: #3a2e17;
+	--sand-fg: #f0c77a;
+	--sky-bg: #15324d;
+	--sky-fg: #8cc6f0;
 	color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme='light']) {
-		--bg: #0f1114;
-		--surface: #171a1f;
-		--ink: #ecedef;
-		--muted: #b9bdc5;
-		--subtle: #959ba5;
-		--line: #2a2e35;
-		--line-soft: #22262c;
-		--chip: #23272e;
-		--accent: #5cc9ae;
-		--on-accent: #0b1f1a;
-		--accent-soft: #143a31;
-		--accent-ink: #bfede1;
-		--btn: #ecedef;
-		--btn-ink: #0f1114;
-		--footer: #08090b;
-		--code: #0a0b0d;
-		--code-ink: #e6e8eb;
-		--warn: #3a2a10;
-		--warn-ink: #fad9a0;
-		--warn-line: #5c4318;
-		--shadow: 0 30px 60px -30px rgb(0 0 0 / 0.7);
-		--logo-bg: #23272e;
+		--bg: #0c1326;
+		--surface: #142043;
+		--ink: #e9edf9;
+		--muted: #c4cce4;
+		--subtle: #95a2c4;
+		--line: #223159;
+		--line-soft: #1b2850;
+		--chip: #1b2752;
+		--accent: #5fd8c2;
+		--on-accent: #08201b;
+		--accent-soft: #11373a;
+		--accent-ink: #9aead9;
+		--btn: #e9edf9;
+		--btn-ink: #0c1326;
+		--footer: #070d1c;
+		--footer-logo: #1b2752;
+		--footer-line: #1c2747;
+		--code: #091024;
+		--code-ink: #dfe5f5;
+		--warn: #33270f;
+		--warn-ink: #f6d697;
+		--warn-line: #5b4519;
+		--shadow: 0 30px 60px -30px rgb(0 0 0 / 0.75);
+		--logo-bg: #25356a;
+
+		--mint-bg: #11373a;
+		--mint-fg: #8fe8d6;
+		--lilac-bg: #232a5e;
+		--lilac-fg: #b7bdff;
+		--sand-bg: #3a2e17;
+		--sand-fg: #f0c77a;
+		--sky-bg: #15324d;
+		--sky-fg: #8cc6f0;
 		color-scheme: dark;
 	}
+}
+
+/* Teintes des pictos (composant Picto, classe tint-<teinte>). */
+.tint-mint {
+	--tint-bg: var(--mint-bg);
+	--tint-fg: var(--mint-fg);
+}
+.tint-lilac {
+	--tint-bg: var(--lilac-bg);
+	--tint-fg: var(--lilac-fg);
+}
+.tint-sand {
+	--tint-bg: var(--sand-bg);
+	--tint-fg: var(--sand-fg);
+}
+.tint-sky {
+	--tint-bg: var(--sky-bg);
+	--tint-fg: var(--sky-fg);
 }
 
 *,

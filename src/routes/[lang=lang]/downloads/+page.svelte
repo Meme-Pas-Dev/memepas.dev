@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Download from '@lucide/svelte/icons/download';
+	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
 	import { apps, type Platform } from '$lib/apps';
 	import { formatDate, formatSize, localize, t } from '$lib/i18n';
 	import AppIcon from '$lib/components/AppIcon.svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
+	import Picto from '$lib/components/Picto.svelte';
+	import { icons, platformPicto } from '$lib/icons';
 	import Seo from '$lib/components/Seo.svelte';
 
 	let { data } = $props();
@@ -17,10 +20,10 @@
 	onMount(() => (enhanced = true));
 
 	const filters = $derived([
-		{ id: 'all' as const, label: d.downloads.all },
-		{ id: 'linux' as const, label: d.os.linux },
-		{ id: 'macos' as const, label: d.os.macos },
-		{ id: 'windows' as const, label: d.os.windows }
+		{ id: 'all' as const, label: d.downloads.all, icon: null },
+		{ id: 'linux' as const, label: d.os.linux, icon: icons[platformPicto.linux.icon] },
+		{ id: 'macos' as const, label: d.os.macos, icon: icons[platformPicto.macos.icon] },
+		{ id: 'windows' as const, label: d.os.windows, icon: icons[platformPicto.windows.icon] }
 	]);
 	const visible = (platform: Platform) => filter === 'all' || filter === platform;
 </script>
@@ -36,7 +39,9 @@
 		{#if enhanced}
 			<div class="filters" role="group" aria-label={d.downloads.filterLabel}>
 				{#each filters as f (f.id)}
-					<button type="button" aria-pressed={filter === f.id} onclick={() => (filter = f.id)}>{f.label}</button>
+					<button type="button" aria-pressed={filter === f.id} onclick={() => (filter = f.id)}>
+						{#if f.icon}<f.icon size={16} strokeWidth={1.8} aria-hidden="true" />{/if}{f.label}
+					</button>
 				{/each}
 			</div>
 		{/if}
@@ -76,11 +81,17 @@
 					</thead>
 					<tbody>
 						{#each release.files as file (file.id)}
+							{@const picto = app.files.find((spec) => spec.id === file.id)?.picto}
 							{#if visible(file.platform)}
 								<tr>
 									<th scope="row">
-										<span class="os">{c.files[file.id]?.label ?? file.platform}</span>
-										<span class="note">{c.files[file.id]?.note}</span>
+										<span class="system">
+											{#if picto}<Picto icon={picto.icon} tint={picto.tint} />{/if}
+											<span>
+												<span class="os">{c.files[file.id]?.label ?? file.platform}</span>
+												<span class="note">{c.files[file.id]?.note}</span>
+											</span>
+										</span>
 									</th>
 									<td class="mono small">
 										{file.name}
@@ -112,7 +123,7 @@
 
 			{#if app.copr && visible('linux')}
 				<div class="copr">
-					<p>{d.downloads.coprHint}</p>
+					<p><RefreshCw size={18} strokeWidth={1.8} aria-hidden="true" />{d.downloads.coprHint}</p>
 					<CodeBlock
 						code="sudo dnf copr enable {app.copr}{'\n'}sudo dnf install {slug}"
 						copyLabel={d.app.copyCommands}
@@ -125,21 +136,30 @@
 
 	<section class="help">
 		<div>
-			<h2>{d.downloads.verifyTitle}</h2>
-			<p>{d.downloads.verifyText}</p>
-			<p>
-				<a href="https://github.com/Meme-Pas-Dev/Quayline/blob/main/packaging/signing-key.asc">{d.downloads.publicKey} ↗</a>
-				·
-				<a href={localize(lang, '/quayline/#installer')}>{d.downloads.howTo}</a>
-			</p>
+			<Picto icon="file-check" tint="mint" />
+			<div class="txt">
+				<h2>{d.downloads.verifyTitle}</h2>
+				<p>{d.downloads.verifyText}</p>
+				<p>
+					<a href="https://github.com/Meme-Pas-Dev/Quayline/blob/main/packaging/signing-key.asc">{d.downloads.publicKey} ↗</a>
+					·
+					<a href={localize(lang, '/quayline/#installer')}>{d.downloads.howTo}</a>
+				</p>
+			</div>
 		</div>
 		<div>
-			<h2>{d.downloads.smartscreenTitle}</h2>
-			<p>{d.downloads.smartscreenText}</p>
+			<Picto icon="triangle-alert" tint="sand" />
+			<div class="txt">
+				<h2>{d.downloads.smartscreenTitle}</h2>
+				<p>{d.downloads.smartscreenText}</p>
+			</div>
 		</div>
 		<div>
-			<h2>{d.downloads.githubTitle}</h2>
-			<p>{d.downloads.githubText}</p>
+			<Picto icon="folder-git" tint="lilac" />
+			<div class="txt">
+				<h2>{d.downloads.githubTitle}</h2>
+				<p>{d.downloads.githubText}</p>
+			</div>
 		</div>
 	</section>
 </div>
@@ -179,6 +199,9 @@
 		background: var(--chip);
 	}
 	.filters button {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
 		min-height: 40px;
 		padding: 0 16px;
 		border-radius: 9px;
@@ -189,6 +212,12 @@
 		font-size: 14px;
 		font-weight: 600;
 		cursor: pointer;
+	}
+	/* Sur les plus petits écrans, le filtre tient sur une ligne sans ses icônes. */
+	@media (max-width: 420px) {
+		.filters button :global(svg) {
+			display: none;
+		}
 	}
 	.filters button[aria-pressed='true'] {
 		background: var(--surface);
@@ -272,6 +301,11 @@
 	tbody tr {
 		border-top: 1px solid var(--line-soft);
 	}
+	.system {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+	}
 	.os {
 		display: block;
 		font-weight: 600;
@@ -347,6 +381,9 @@
 		background: var(--accent-soft);
 	}
 	.copr p {
+		display: flex;
+		align-items: center;
+		gap: 10px;
 		margin: 0;
 		font-weight: 600;
 		font-size: 15px;
@@ -359,13 +396,20 @@
 		grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
 		gap: 16px;
 	}
-	.help div {
+	/* Picto à gauche, titre et texte à droite. */
+	.help > div {
 		padding: 24px;
 		border-radius: 16px;
 		background: var(--chip);
 		display: flex;
+		align-items: flex-start;
+		gap: 16px;
+	}
+	.help .txt {
+		display: flex;
 		flex-direction: column;
 		gap: 10px;
+		min-width: 0;
 	}
 	.help h2 {
 		margin: 0;

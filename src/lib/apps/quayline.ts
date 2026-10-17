@@ -26,28 +26,32 @@ export const quayline: AppDefinition = {
 			platform: 'linux',
 			pattern: /^Quayline-.+\.x86_64\.rpm$/,
 			example: 'Quayline-X.Y.Z-N.x86_64.rpm',
-			checksums: ['SHA256SUMS', 'SHA256SUMS.asc']
+			checksums: ['SHA256SUMS', 'SHA256SUMS.asc'],
+			picto: { icon: 'package', tint: 'sand' }
 		},
 		{
 			id: 'flatpak',
 			platform: 'linux',
 			pattern: /^quayline\.flatpak$/,
 			example: 'quayline.flatpak',
-			checksums: ['SHA256SUMS.flatpak', 'SHA256SUMS.flatpak.asc']
+			checksums: ['SHA256SUMS.flatpak', 'SHA256SUMS.flatpak.asc'],
+			picto: { icon: 'box', tint: 'mint' }
 		},
 		{
 			id: 'dmg',
 			platform: 'macos',
 			pattern: /^Quayline-.+-macos-arm64\.dmg$/,
 			example: 'Quayline-X.Y.Z-macos-arm64.dmg',
-			checksums: []
+			checksums: [],
+			picto: { icon: 'laptop', tint: 'lilac' }
 		},
 		{
 			id: 'exe',
 			platform: 'windows',
 			pattern: /^Quayline-.+-windows-x64-setup\.exe$/,
 			example: 'Quayline-X.Y.Z-windows-x64-setup.exe',
-			checksums: ['SHA256SUMS.windows', 'SHA256SUMS.windows.asc']
+			checksums: ['SHA256SUMS.windows', 'SHA256SUMS.windows.asc'],
+			picto: { icon: 'monitor', tint: 'sky' }
 		}
 	],
 	// Nom écrit comme dans la barre latérale de l'application : Inter Variable, 700, −0,01 em.
@@ -71,8 +75,18 @@ export const quayline: AppDefinition = {
 			summary:
 				'Serveurs, identifiants et clés sont rangés dans un coffre chiffré, sur votre machine uniquement. L’interface est en français et en anglais.',
 			card: 'Client SSH et SFTP pensé pour la sécurité. Serveurs, identifiants et clés sont rangés dans un coffre chiffré, sur votre machine uniquement.',
+			highlights: [
+				{ icon: 'lock', tint: 'mint', label: 'Coffre chiffré' },
+				{ icon: 'eye-off', tint: 'sky', label: 'Aucune télémétrie' },
+				{ icon: 'scale', tint: 'lilac', label: 'GPL-3.0' }
+			],
 			platforms: 'Linux · macOS · Windows 11',
-			badges: ['Logiciel libre · GPL-3.0', 'Aucune télémétrie', 'Paquets signés', 'FIDO2 · OpenID Connect'],
+			badges: [
+				{ label: 'Logiciel libre · GPL-3.0', icon: 'scale' },
+				{ label: 'Aucune télémétrie', icon: 'eye-off' },
+				{ label: 'Paquets signés', icon: 'badge-check' },
+				{ label: 'FIDO2 · OpenID Connect', icon: 'key' }
+			],
 			files: {
 				rpm: { label: 'Fedora (RPM)', note: 'KDE Plasma et GNOME · x86_64 · sans mise à jour automatique' },
 				flatpak: { label: 'Flatpak', note: 'Runtime GNOME de Flathub · sans mise à jour automatique' },
@@ -85,31 +99,37 @@ export const quayline: AppDefinition = {
 			features: [
 				{
 					icon: 'terminal',
+					tint: 'lilac',
 					title: 'Terminal et SFTP',
 					text: 'Terminal SSH à onglets et explorateur SFTP en double panneau (glisser-déposer, transferts en arrière-plan, permissions), ouverture de l’un depuis l’autre.'
 				},
 				{
-					icon: 'edit',
+					icon: 'pencil',
+					tint: 'sky',
 					title: 'Édition à distance',
 					text: 'Les fichiers distants se modifient dans un éditeur intégré ou dans l’application par défaut du système, les changements étant renvoyés au serveur.'
 				},
 				{
-					icon: 'vault',
+					icon: 'lock',
+					tint: 'mint',
 					title: 'Coffre chiffré',
 					text: 'Serveurs, mots de passe et clés SSH, avec export et import chiffrés pour la sauvegarde ou le passage à un autre ordinateur.'
 				},
 				{
 					icon: 'key',
+					tint: 'sand',
 					title: 'Déverrouillage au choix',
 					text: 'Mot de passe maître, clé de sécurité FIDO2 (YubiKey, Nitrokey…) ou fournisseur d’identité OpenID Connect (Pocket ID ; Authentik, Authelia, Keycloak, Microsoft Entra ID et Google en bêta), y compris depuis un téléphone par QR code.'
 				},
 				{
 					icon: 'clock',
+					tint: 'lilac',
 					title: 'Verrouillage automatique',
 					text: 'Après inactivité, au verrouillage de la session ou de l’écran, et avant la mise en veille.'
 				},
 				{
-					icon: 'shield',
+					icon: 'shield-check',
+					tint: 'mint',
 					title: 'Vérifications et hygiène',
 					text: 'Vérification des clés d’hôte (alerte bloquante si elle change), copie des mots de passe avec effacement automatique du presse-papiers, mises à jour signalées par l’application (installées en un clic sous macOS), thème clair ou sombre.'
 				}
@@ -118,26 +138,30 @@ export const quayline: AppDefinition = {
 				title: 'Un coffre entièrement chiffré',
 				intro: 'Tout est chiffré, y compris la liste des serveurs ; toute altération du fichier est détectée.',
 				chain: [
-					{ label: 'Mot de passe maître' },
-					{ label: 'Argon2id', detail: '256 Mio, 3 passes', highlight: true },
-					{ label: 'Clé de données aléatoire' },
-					{ label: 'XChaCha20-Poly1305', detail: 'coffre chiffré', highlight: true }
+					{ label: 'Mot de passe maître', icon: 'rectangle-ellipsis' },
+					{ label: 'Argon2id', detail: '256 Mio, 3 passes', highlight: true, icon: 'hash' },
+					{ label: 'Clé de données aléatoire', icon: 'shuffle' },
+					{ label: 'XChaCha20-Poly1305', detail: 'coffre chiffré', highlight: true, icon: 'lock' }
 				],
 				chainCaption: 'Le mot de passe maître protège une clé de données aléatoire, qui chiffre le coffre.',
 				points: [
 					{
+						icon: 'cpu', tint: 'sky',
 						title: 'Mémoire',
 						text: 'Clé de données et secrets effacés au verrouillage du coffre, core dumps désactivés, processus non traçable (Linux, macOS).'
 					},
 					{
+						icon: 'files', tint: 'lilac',
 						title: 'Une seule copie à la fois',
 						text: 'Le fichier du coffre est réservé à la copie qui l’a déverrouillé : deux copies ne peuvent pas écraser les modifications l’une de l’autre.'
 					},
 					{
+						icon: 'app-window', tint: 'sand',
 						title: 'Interface isolée',
 						text: 'Aucun secret ne repart vers l’interface web ; politique de sécurité stricte, aucune ressource distante.'
 					},
 					{
+						icon: 'file-check', tint: 'mint',
 						title: 'Paquets signés',
 						text: 'Le RPM, le Flatpak et l’installateur Windows sont accompagnés d’empreintes signées avec la clé du projet ; les paquets COPR sont signés par COPR, le service de compilation de Fedora ; l’application macOS est signée et notarisée par Apple.'
 					}
@@ -154,6 +178,7 @@ export const quayline: AppDefinition = {
 					id: 'fedora',
 					label: 'Fedora',
 					platform: 'linux',
+					icon: 'package',
 					blocks: [
 						{
 							type: 'p',
@@ -175,6 +200,7 @@ export const quayline: AppDefinition = {
 					id: 'flatpak',
 					label: 'Flatpak',
 					platform: 'linux',
+					icon: 'box',
 					blocks: [
 						{
 							type: 'p',
@@ -191,6 +217,7 @@ export const quayline: AppDefinition = {
 					id: 'macos',
 					label: 'macOS',
 					platform: 'macos',
+					icon: 'laptop',
 					blocks: [
 						{
 							type: 'p',
@@ -206,6 +233,7 @@ export const quayline: AppDefinition = {
 					id: 'windows',
 					label: 'Windows 11',
 					platform: 'windows',
+					icon: 'monitor',
 					blocks: [
 						{
 							type: 'p',
@@ -248,8 +276,18 @@ export const quayline: AppDefinition = {
 			summary:
 				'Servers, credentials and keys are kept in an encrypted vault, on your machine only. The interface is available in English and French.',
 			card: 'A security-focused SSH and SFTP client. Servers, credentials and keys are kept in an encrypted vault, on your machine only.',
+			highlights: [
+				{ icon: 'lock', tint: 'mint', label: 'Encrypted vault' },
+				{ icon: 'eye-off', tint: 'sky', label: 'No telemetry' },
+				{ icon: 'scale', tint: 'lilac', label: 'GPL-3.0' }
+			],
 			platforms: 'Linux · macOS · Windows 11',
-			badges: ['Free software · GPL-3.0', 'No telemetry', 'Signed packages', 'FIDO2 · OpenID Connect'],
+			badges: [
+				{ label: 'Free software · GPL-3.0', icon: 'scale' },
+				{ label: 'No telemetry', icon: 'eye-off' },
+				{ label: 'Signed packages', icon: 'badge-check' },
+				{ label: 'FIDO2 · OpenID Connect', icon: 'key' }
+			],
 			files: {
 				rpm: { label: 'Fedora (RPM)', note: 'KDE Plasma and GNOME · x86_64 · no automatic updates' },
 				flatpak: { label: 'Flatpak', note: 'GNOME runtime from Flathub · no automatic updates' },
@@ -262,31 +300,37 @@ export const quayline: AppDefinition = {
 			features: [
 				{
 					icon: 'terminal',
+					tint: 'lilac',
 					title: 'Terminal and SFTP',
 					text: 'Tabbed SSH terminal and dual-pane SFTP browser (drag and drop, background transfers, permissions); each one opens from the other.'
 				},
 				{
-					icon: 'edit',
+					icon: 'pencil',
+					tint: 'sky',
 					title: 'Remote editing',
 					text: 'Remote files can be edited in a built-in editor or in the system’s default application, changes being sent back to the server.'
 				},
 				{
-					icon: 'vault',
+					icon: 'lock',
+					tint: 'mint',
 					title: 'Encrypted vault',
 					text: 'Servers, passwords and SSH keys, with encrypted export and import for backups or moving to another computer.'
 				},
 				{
 					icon: 'key',
+					tint: 'sand',
 					title: 'Your choice of unlock',
 					text: 'Master password, FIDO2 security key (YubiKey, Nitrokey…) or OpenID Connect identity provider (Pocket ID; Authentik, Authelia, Keycloak, Microsoft Entra ID and Google in beta), including from a phone via a QR code.'
 				},
 				{
 					icon: 'clock',
+					tint: 'lilac',
 					title: 'Automatic lock',
 					text: 'After inactivity, when the session or screen is locked, and before sleep.'
 				},
 				{
-					icon: 'shield',
+					icon: 'shield-check',
+					tint: 'mint',
 					title: 'Checks and hygiene',
 					text: 'Host key verification (blocking alert if it changes), password copy with automatic clipboard clearing, updates announced by the app (one-click install on macOS), light or dark theme.'
 				}
@@ -295,26 +339,30 @@ export const quayline: AppDefinition = {
 				title: 'A fully encrypted vault',
 				intro: 'Everything is encrypted, including the server list; any tampering with the file is detected.',
 				chain: [
-					{ label: 'Master password' },
-					{ label: 'Argon2id', detail: '256 MiB, 3 passes', highlight: true },
-					{ label: 'Random data key' },
-					{ label: 'XChaCha20-Poly1305', detail: 'encrypted vault', highlight: true }
+					{ label: 'Master password', icon: 'rectangle-ellipsis' },
+					{ label: 'Argon2id', detail: '256 MiB, 3 passes', highlight: true, icon: 'hash' },
+					{ label: 'Random data key', icon: 'shuffle' },
+					{ label: 'XChaCha20-Poly1305', detail: 'encrypted vault', highlight: true, icon: 'lock' }
 				],
 				chainCaption: 'The master password protects a random data key, which encrypts the vault.',
 				points: [
 					{
+						icon: 'cpu', tint: 'sky',
 						title: 'Memory',
 						text: 'The data key and secrets are wiped when the vault is locked, core dumps are disabled, the process cannot be traced (Linux, macOS).'
 					},
 					{
+						icon: 'files', tint: 'lilac',
 						title: 'One copy at a time',
 						text: 'The vault file is reserved for the copy that unlocked it: two copies cannot overwrite each other’s changes.'
 					},
 					{
+						icon: 'app-window', tint: 'sand',
 						title: 'Isolated interface',
 						text: 'No secret is ever sent back to the web interface; strict content security policy, no remote resources.'
 					},
 					{
+						icon: 'file-check', tint: 'mint',
 						title: 'Signed packages',
 						text: 'The RPM, the Flatpak and the Windows installer come with checksums signed with the project key; COPR packages are signed by COPR, Fedora’s build service; the macOS app is signed and notarized by Apple.'
 					}
@@ -331,6 +379,7 @@ export const quayline: AppDefinition = {
 					id: 'fedora',
 					label: 'Fedora',
 					platform: 'linux',
+					icon: 'package',
 					blocks: [
 						{
 							type: 'p',
@@ -352,6 +401,7 @@ export const quayline: AppDefinition = {
 					id: 'flatpak',
 					label: 'Flatpak',
 					platform: 'linux',
+					icon: 'box',
 					blocks: [
 						{
 							type: 'p',
@@ -368,6 +418,7 @@ export const quayline: AppDefinition = {
 					id: 'macos',
 					label: 'macOS',
 					platform: 'macos',
+					icon: 'laptop',
 					blocks: [
 						{
 							type: 'p',
@@ -383,6 +434,7 @@ export const quayline: AppDefinition = {
 					id: 'windows',
 					label: 'Windows 11',
 					platform: 'windows',
+					icon: 'monitor',
 					blocks: [
 						{
 							type: 'p',

@@ -2,12 +2,22 @@
 	import { site } from '$lib/config';
 	import { formatDate, t } from '$lib/i18n';
 	import Seo from '$lib/components/Seo.svelte';
+	import Picto from '$lib/components/Picto.svelte';
+	import { icons, type Picto as PictoSpec } from '$lib/icons';
 
 	let { data } = $props();
 	const lang = $derived(data.lang);
 	const d = $derived(t(lang));
 	const s = $derived(d.legal.sections);
 	// Ancres identiques dans les deux langues (liens du pied de page).
+	const { user: UserIcon, mail: MailIcon, server: ServerIcon, 'folder-git': SourceIcon } = icons;
+	const pictos: Record<string, PictoSpec> = {
+		mentions: { icon: 'landmark', tint: 'lilac' },
+		confidentialite: { icon: 'eye-off', tint: 'mint' },
+		cookies: { icon: 'cookie', tint: 'sand' },
+		accessibilite: { icon: 'accessibility', tint: 'sky' },
+		credits: { icon: 'award', tint: 'lilac' }
+	};
 	const toc = $derived([
 		{ id: 'mentions', label: s.mentions },
 		{ id: 'confidentialite', label: s.privacy },
@@ -27,28 +37,31 @@
 		<nav class="toc" aria-label={d.legal.toc}>
 			<ul>
 				{#each toc as item (item.id)}
-					<li><a href="#{item.id}">{item.label}</a></li>
+					{@const Icon = icons[pictos[item.id].icon]}
+					<li>
+						<a href="#{item.id}"><span class="tint-{pictos[item.id].tint} toc-icon"><Icon size={17} strokeWidth={1.8} aria-hidden="true" /></span>{item.label}</a>
+					</li>
 				{/each}
 			</ul>
 		</nav>
 
 		<div class="content">
 			<section id="mentions" class="card">
-				<h2>{s.mentions}</h2>
+				<h2><Picto {...pictos.mentions} />{s.mentions}</h2>
 				<dl>
-					<dt>{d.legal.publisherLabel}</dt>
+					<dt><UserIcon size={16} strokeWidth={1.8} aria-hidden="true" />{d.legal.publisherLabel}</dt>
 					<dd>{d.legal.publisher}</dd>
-					<dt>{d.legal.contactLabel}</dt>
+					<dt><MailIcon size={16} strokeWidth={1.8} aria-hidden="true" />{d.legal.contactLabel}</dt>
 					<dd><a href="mailto:{site.contactEmail}">{site.contactEmail}</a></dd>
-					<dt>{d.legal.hostLabel}</dt>
+					<dt><ServerIcon size={16} strokeWidth={1.8} aria-hidden="true" />{d.legal.hostLabel}</dt>
 					<dd>{site.host.name} — {site.host.address}</dd>
-					<dt>{d.legal.sourceLabel}</dt>
+					<dt><SourceIcon size={16} strokeWidth={1.8} aria-hidden="true" />{d.legal.sourceLabel}</dt>
 					<dd><a href={site.repository}>{site.repository.replace('https://', '')}</a></dd>
 				</dl>
 			</section>
 
 			<section id="confidentialite" class="card">
-				<h2>{d.legal.privacyTitle}</h2>
+				<h2><Picto {...pictos.confidentialite} />{d.legal.privacyTitle}</h2>
 				<p class="summary">{d.legal.privacySummary}</p>
 				{#each d.legal.privacy as paragraph (paragraph)}
 					<p>{paragraph}</p>
@@ -56,17 +69,17 @@
 			</section>
 
 			<section id="cookies" class="card">
-				<h2>{s.cookies}</h2>
+				<h2><Picto {...pictos.cookies} />{s.cookies}</h2>
 				<p>{d.legal.cookiesText}</p>
 			</section>
 
 			<section id="accessibilite" class="card">
-				<h2>{s.accessibility}</h2>
+				<h2><Picto {...pictos.accessibilite} />{s.accessibility}</h2>
 				<p>{d.legal.accessibilityText} <a href="mailto:{site.contactEmail}">{d.legal.accessibilityLink}</a>.</p>
 			</section>
 
 			<section id="credits" class="card">
-				<h2>{s.credits}</h2>
+				<h2><Picto {...pictos.credits} />{s.credits}</h2>
 				<ul>
 					{#each d.legal.credits as credit (credit)}
 						<li>{credit}</li>
@@ -113,11 +126,17 @@
 		font-size: 15px;
 	}
 	.toc a {
-		display: block;
+		display: flex;
+		align-items: center;
+		gap: 10px;
 		padding: 10px 14px;
 		border-radius: 8px;
 		color: var(--muted);
 		text-decoration: none;
+	}
+	.toc-icon {
+		display: flex;
+		color: var(--tint-fg);
 	}
 	.toc a:hover {
 		background: var(--chip);
@@ -143,6 +162,9 @@
 		margin-top: 14px;
 	}
 	h2 {
+		display: flex;
+		align-items: center;
+		gap: 14px;
 		margin: 0 0 18px;
 		font-family: var(--font-display);
 		font-size: 26px;
@@ -155,6 +177,9 @@
 		gap: 12px 24px;
 	}
 	dt {
+		display: flex;
+		align-items: center;
+		gap: 8px;
 		font-weight: 600;
 		color: var(--ink);
 	}

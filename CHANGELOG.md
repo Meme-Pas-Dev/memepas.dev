@@ -1,5 +1,19 @@
 # Changelog / Journal des modifications
 
+## [1.1.0] - 2026-10-17
+
+### English
+
+- Pictograms throughout the site, in four soft tints: principles, catalogue, features,
+  security, installation, downloads and legal information.
+- New deep blue dark theme, easier to read.
+
+### Français
+
+- Pictos sur l'ensemble du site, en quatre teintes douces : principes, catalogue,
+  fonctionnalités, sécurité, installation, téléchargements et informations légales.
+- Nouveau thème sombre bleu nuit, plus lisible.
+
 ## [1.0.2] - 2026-10-17
 
 ### English

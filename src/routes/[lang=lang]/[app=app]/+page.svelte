@@ -1,18 +1,14 @@
 <script lang="ts">
-	import Terminal from '@lucide/svelte/icons/terminal';
-	import Pencil from '@lucide/svelte/icons/pencil';
-	import Lock from '@lucide/svelte/icons/lock';
-	import KeyRound from '@lucide/svelte/icons/key-round';
-	import Clock from '@lucide/svelte/icons/clock';
-	import ShieldCheck from '@lucide/svelte/icons/shield-check';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { apps } from '$lib/apps';
-	import { screenshotSrcset, screenshotUrl, type FeatureIcon } from '$lib/apps/types';
+	import { screenshotSrcset, screenshotUrl } from '$lib/apps/types';
+	import { icons } from '$lib/icons';
 	import { formatDate, localize, t } from '$lib/i18n';
 	import AppIcon from '$lib/components/AppIcon.svelte';
 	import Carousel from '$lib/components/Carousel.svelte';
 	import DownloadCard from '$lib/components/DownloadCard.svelte';
 	import InstallTabs from '$lib/components/InstallTabs.svelte';
+	import Picto from '$lib/components/Picto.svelte';
 	import RichText from '$lib/components/RichText.svelte';
 	import Seo from '$lib/components/Seo.svelte';
 	import { appJsonLd } from '$lib/structured-data';
@@ -32,15 +28,6 @@
 			alt: c.screenshotAlt[i] ?? app.name
 		}))
 	);
-
-	const featureIcons: Record<FeatureIcon, typeof Terminal> = {
-		terminal: Terminal,
-		edit: Pencil,
-		vault: Lock,
-		key: KeyRound,
-		clock: Clock,
-		shield: ShieldCheck
-	};
 </script>
 
 <Seo
@@ -77,8 +64,9 @@
 			<p class="tagline">{c.tagline}</p>
 			<p class="lead summary">{c.summary}</p>
 			<ul class="badges" aria-label={d.app.inBrief}>
-				{#each c.badges as badge, i (badge)}
-					<li class:accent={i === 0}>{badge}</li>
+				{#each c.badges as badge, i (badge.label)}
+					{@const Icon = icons[badge.icon]}
+					<li class:accent={i === 0}><Icon size={15} strokeWidth={1.8} aria-hidden="true" />{badge.label}</li>
 				{/each}
 			</ul>
 		</div>
@@ -100,11 +88,12 @@
 		<h2 class="section-title narrow">{c.featuresTitle}</h2>
 		<div class="features">
 			{#each c.features as feature (feature.title)}
-				{@const Icon = featureIcons[feature.icon]}
 				<div class="feature">
-					<span class="feature-icon"><Icon size={22} strokeWidth={1.8} /></span>
-					<h3>{feature.title}</h3>
-					<p>{feature.text}</p>
+					<Picto icon={feature.icon} tint={feature.tint} />
+					<div class="txt">
+						<h3>{feature.title}</h3>
+						<p>{feature.text}</p>
+					</div>
 				</div>
 			{/each}
 		</div>
@@ -119,7 +108,9 @@
 	<figure class="card chain">
 		<ol>
 			{#each c.security.chain as step, i (step.label)}
+				{@const Icon = icons[step.icon]}
 				<li class:highlight={step.highlight}>
+					<span class="step-icon"><Icon size={22} strokeWidth={1.8} aria-hidden="true" /></span>
 					<span class="step-label">{step.label}</span>
 					{#if step.detail}<span class="step-detail">{step.detail}</span>{/if}
 				</li>
@@ -133,9 +124,12 @@
 
 	<div class="points">
 		{#each c.security.points as point (point.title)}
-			<div>
-				<h3>{point.title}</h3>
-				<p>{point.text}</p>
+			<div class="point">
+				<Picto icon={point.icon} tint={point.tint} />
+				<div class="txt">
+					<h3>{point.title}</h3>
+					<p>{point.text}</p>
+				</div>
 			</div>
 		{/each}
 	</div>
@@ -165,11 +159,11 @@
 
 <section class="container closing">
 	<div class="card closing-card">
-		<h2>{d.app.privacy}</h2>
+		<h2><Picto icon="eye-off" tint="sky" />{d.app.privacy}</h2>
 		<p>{c.privacy}</p>
 	</div>
 	<div class="card closing-card">
-		<h2>{d.app.license}</h2>
+		<h2><Picto icon="scale" tint="lilac" />{d.app.license}</h2>
 		<p>{c.license}</p>
 		<p><a href={repoUrl}>{d.app.sourceCode} ↗</a></p>
 	</div>
@@ -253,6 +247,9 @@
 		list-style: none;
 	}
 	.badges li {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
 		padding: 6px 12px;
 		border-radius: 999px;
 		background: var(--chip);
@@ -285,20 +282,18 @@
 		grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
 		gap: 40px 48px;
 	}
-	.feature {
+	/* Picto à gauche, titre et texte à droite. */
+	.feature,
+	.point {
+		display: flex;
+		align-items: flex-start;
+		gap: 16px;
+	}
+	.txt {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
-	}
-	.feature-icon {
-		width: 44px;
-		height: 44px;
-		border-radius: 10px;
-		background: var(--accent-soft);
-		color: var(--accent);
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		gap: 8px;
+		min-width: 0;
 	}
 	.feature h3,
 	.points h3 {
@@ -339,7 +334,13 @@
 		text-align: center;
 		display: flex;
 		flex-direction: column;
+		align-items: center;
 		gap: 4px;
+	}
+	.step-icon {
+		display: flex;
+		margin-bottom: 4px;
+		opacity: 0.85;
 	}
 	.chain li.highlight {
 		background: var(--accent-soft);
@@ -365,11 +366,6 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
 		gap: 32px 40px;
-	}
-	.points div {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
 	}
 	.warning {
 		margin-top: 40px;
@@ -407,7 +403,10 @@
 		padding: 28px;
 	}
 	.closing-card h2 {
-		margin: 0 0 10px;
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		margin: 0 0 14px;
 		font-size: 18px;
 		font-weight: 600;
 	}

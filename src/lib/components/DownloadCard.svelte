@@ -5,8 +5,10 @@
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import type { AppDefinition, Platform, ResolvedRelease } from '$lib/apps';
 	import { formatDate, formatSize, localize, t, type Lang } from '$lib/i18n';
+	import { icons, platformPicto } from '$lib/icons';
 	import { detectPlatform } from '$lib/os';
 	import CodeBlock from './CodeBlock.svelte';
+	import Picto from './Picto.svelte';
 
 	let { app, release, lang }: { app: AppDefinition; release: ResolvedRelease; lang: Lang } = $props();
 
@@ -26,6 +28,7 @@
 		windows: d.os.windows
 	});
 	const filesFor = (p: Platform) => release.files.filter((f) => f.platform === p);
+	const pictoOf = (id: string) => app.files.find((spec) => spec.id === id)?.picto;
 	const platforms = $derived([...new Set(release.files.map((f) => f.platform))]);
 	const coprCommands = $derived(app.copr ? `sudo dnf copr enable ${app.copr}\nsudo dnf install ${app.slug}` : '');
 	const sizeOf = (bytes: number | null) => (bytes ? ` · ${formatSize(lang, bytes)}` : '');
@@ -53,7 +56,12 @@
 			<p class="small">{d.app.coprNote} <code class="inline-code">dnf upgrade</code>.</p>
 			<div class="alt">
 				{#each filesFor('linux') as file (file.id)}
-					<a class="btn btn-secondary" href={file.url}>{content.files[file.id]?.label ?? file.name}</a>
+					{@const picto = pictoOf(file.id)}
+					{@const Icon = picto ? icons[picto.icon] : null}
+					<a class="btn btn-secondary" href={file.url}>
+						{#if Icon && picto}<span class="tint-{picto.tint} file-icon"><Icon size={16} strokeWidth={1.8} aria-hidden="true" /></span>{/if}
+						{content.files[file.id]?.label ?? file.name}
+					</a>
 				{/each}
 			</div>
 			<p class="small">{d.app.manualNote}</p>
@@ -81,7 +89,7 @@
 				{@const first = filesFor(p)[0]}
 				<li>
 					<a class="btn btn-secondary choice" href={p === 'linux' && app.copr ? '#installer' : first.url}>
-						<Download size={18} />
+						<Picto icon={platformPicto[p].icon} tint={platformPicto[p].tint} size="sm" />
 						<span>{p === 'linux' ? osName.linux : (content.files[first.id]?.label ?? osName[p])}</span>
 					</a>
 				</li>
@@ -179,6 +187,11 @@
 	.choice {
 		width: 100%;
 		justify-content: flex-start;
+		padding-left: 8px;
+	}
+	.file-icon {
+		display: flex;
+		color: var(--tint-fg);
 	}
 	.links {
 		border-top: 1px solid var(--line-soft);
