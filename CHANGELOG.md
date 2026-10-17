@@ -1,5 +1,25 @@
 # Changelog / Journal des modifications
 
+## [1.1.1] - 2026-10-17
+
+### English
+
+- The download card shows the right version for the visitor's system from the first
+  display, and the downloads filter no longer pushes the page down: no more layout shift
+  while loading.
+- Text and heading fonts are preloaded, so the page no longer moves when they replace
+  the fallback font.
+- Scrollable command blocks can be scrolled with the keyboard.
+
+### Français
+
+- La carte de téléchargement affiche dès le premier affichage la variante adaptée au
+  système du visiteur, et le filtre des téléchargements ne décale plus la page : plus de
+  saut de mise en page au chargement.
+- Les polices du texte et des titres sont préchargées : la page ne bouge plus quand elles
+  remplacent la police de secours.
+- Les blocs de commandes qui défilent sont accessibles au clavier.
+
 ## [1.1.0] - 2026-10-17
 
 ### English

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import Download from '@lucide/svelte/icons/download';
 	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
 	import { apps, type Platform } from '$lib/apps';
@@ -14,10 +13,9 @@
 	const lang = $derived(data.lang);
 	const d = $derived(t(lang));
 
-	// Le filtre n'apparaît qu'avec JavaScript ; sans lui, tout est affiché.
-	let enhanced = $state(false);
+	// Le filtre n'apparaît qu'avec JavaScript (attribut data-js posé avant l'affichage par
+	// static/platform.js, donc sans décalage) ; sans lui, tout est affiché.
 	let filter = $state<Platform | 'all'>('all');
-	onMount(() => (enhanced = true));
 
 	const filters = $derived([
 		{ id: 'all' as const, label: d.downloads.all, icon: null },
@@ -36,15 +34,13 @@
 			<h1>{d.downloads.title}</h1>
 			<p class="lead">{d.downloads.intro}</p>
 		</div>
-		{#if enhanced}
-			<div class="filters" role="group" aria-label={d.downloads.filterLabel}>
-				{#each filters as f (f.id)}
-					<button type="button" aria-pressed={filter === f.id} onclick={() => (filter = f.id)}>
-						{#if f.icon}<f.icon size={16} strokeWidth={1.8} aria-hidden="true" />{/if}{f.label}
-					</button>
-				{/each}
-			</div>
-		{/if}
+		<div class="filters" role="group" aria-label={d.downloads.filterLabel}>
+			{#each filters as f (f.id)}
+				<button type="button" aria-pressed={filter === f.id} onclick={() => (filter = f.id)}>
+					{#if f.icon}<f.icon size={16} strokeWidth={1.8} aria-hidden="true" />{/if}{f.label}
+				</button>
+			{/each}
+		</div>
 	</div>
 
 	{#each data.releases as { slug, release } (slug)}
@@ -191,7 +187,7 @@
 		margin: 0;
 	}
 	.filters {
-		display: flex;
+		display: none;
 		flex-wrap: wrap;
 		gap: 6px;
 		padding: 4px;
@@ -212,6 +208,9 @@
 		font-size: 14px;
 		font-weight: 600;
 		cursor: pointer;
+	}
+	:global(:root[data-js]) .filters {
+		display: flex;
 	}
 	/* Sur les plus petits écrans, le filtre tient sur une ligne sans ses icônes. */
 	@media (max-width: 420px) {

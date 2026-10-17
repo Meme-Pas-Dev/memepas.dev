@@ -25,7 +25,9 @@
 					>{/each}</code
 			></pre>
 	{:else}
-		<pre><code>{code}</code></pre>
+		<!-- Bloc qui peut défiler : focalisable pour le faire défiler au clavier. -->
+		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+		<pre tabindex="0"><code>{code}</code></pre>
 	{/if}
 	<div class="actions">
 		<CopyButton value={code} label={copyLabel} {copiedLabel} />
