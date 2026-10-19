@@ -1,13 +1,13 @@
 name: Déploiement
 
 # Construit le site et le déploie sur Cloudflare. Tourne uniquement dans le dépôt public :
-# à chaque étiquette de version, chaque nuit (pour reprendre les dernières versions des
-# applications) et à la demande.
+# à chaque étiquette de version, toutes les trois heures (pour reprendre les dernières
+# versions des applications) et à la demande. GitHub peut retarder les exécutions planifiées.
 on:
   push:
     tags: ["v*"]
   schedule:
-    - cron: "17 4 * * *"
+    - cron: "17 */3 * * *"
   workflow_dispatch:
 
 permissions:

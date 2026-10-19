@@ -1,5 +1,17 @@
 # Changelog / Journal des modifications
 
+## [1.1.3] - 2026-10-19
+
+### English
+
+- The site is rebuilt every three hours instead of once a night, so new application
+  releases appear sooner.
+
+### Français
+
+- Le site est reconstruit toutes les trois heures au lieu d'une fois par nuit : les
+  nouvelles versions des applications y apparaissent plus vite.
+
 ## [1.1.2] - 2026-10-17
 
 ### English

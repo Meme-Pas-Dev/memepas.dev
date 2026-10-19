@@ -42,8 +42,8 @@ worker/                   Worker Cloudflare
 ## Publication
 
 Chaque version du site est une étiquette `vX.Y.Z` de ce dépôt ; le site est aussi
-reconstruit chaque nuit pour reprendre les dernières versions des applications. Le
-journal des modifications est dans [CHANGELOG.md](CHANGELOG.md).
+reconstruit toutes les trois heures pour reprendre les dernières versions des
+applications. Le journal des modifications est dans [CHANGELOG.md](CHANGELOG.md).
 
 ## Licence
 
