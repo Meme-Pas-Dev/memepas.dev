@@ -92,7 +92,7 @@
 					<Picto icon={feature.icon} tint={feature.tint} />
 					<div class="txt">
 						<h3>{feature.title}</h3>
-						<p>{feature.text}</p>
+						<p><RichText text={feature.text} /></p>
 					</div>
 				</div>
 			{/each}

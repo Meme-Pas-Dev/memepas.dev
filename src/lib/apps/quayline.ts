@@ -101,7 +101,7 @@ export const quayline: AppDefinition = {
 					icon: 'terminal',
 					tint: 'lilac',
 					title: 'Terminal et SFTP',
-					text: 'Terminal SSH à onglets et explorateur SFTP en double panneau (glisser-déposer, transferts en arrière-plan, permissions), ouverture de l’un depuis l’autre.'
+					text: 'Terminal SSH à onglets et explorateur SFTP en double panneau (glisser-déposer, transferts en arrière-plan, permissions), ouverture de l’un depuis l’autre. Terminal local dans un onglet, à côté des sessions SSH (`Ctrl+Maj+T`, `Cmd+T` sous macOS), sauf dans le Flatpak qui reste isolé du système.'
 				},
 				{
 					icon: 'pencil',
@@ -251,7 +251,7 @@ export const quayline: AppDefinition = {
 						{ type: 'code', code: 'gpg --import signing-key.asc\ngpg --verify SHA256SUMS.windows.asc SHA256SUMS.windows' },
 						{
 							type: 'p',
-							text: 'Les clés de sécurité (FIDO2) passent par la fenêtre de Windows (choix de la clé, code PIN, toucher). Le coffre est rangé dans `%APPDATA%\\dev.memepas.quayline\\`.'
+							text: 'Les clés de sécurité (FIDO2) passent par la fenêtre de Windows (choix de la clé, code PIN, toucher). Le terminal local est désactivé par défaut sous Windows : il s’active dans Réglages → Terminal. Le coffre est rangé dans `%APPDATA%\\dev.memepas.quayline\\`.'
 						}
 					]
 				}
@@ -302,7 +302,7 @@ export const quayline: AppDefinition = {
 					icon: 'terminal',
 					tint: 'lilac',
 					title: 'Terminal and SFTP',
-					text: 'Tabbed SSH terminal and dual-pane SFTP browser (drag and drop, background transfers, permissions); each one opens from the other.'
+					text: 'Tabbed SSH terminal and dual-pane SFTP browser (drag and drop, background transfers, permissions); each one opens from the other. Local terminal in a tab, next to SSH sessions (`Ctrl+Shift+T`, `Cmd+T` on macOS), except in the Flatpak, which stays isolated from the system.'
 				},
 				{
 					icon: 'pencil',
@@ -452,7 +452,7 @@ export const quayline: AppDefinition = {
 						{ type: 'code', code: 'gpg --import signing-key.asc\ngpg --verify SHA256SUMS.windows.asc SHA256SUMS.windows' },
 						{
 							type: 'p',
-							text: 'Security keys (FIDO2) go through Windows’ own window (key choice, PIN, touch). The vault is stored in `%APPDATA%\\dev.memepas.quayline\\`.'
+							text: 'Security keys (FIDO2) go through Windows’ own window (key choice, PIN, touch). The local terminal is off by default on Windows: turn it on in Settings → Terminal. The vault is stored in `%APPDATA%\\dev.memepas.quayline\\`.'
 						}
 					]
 				}

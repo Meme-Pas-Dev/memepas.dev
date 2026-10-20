@@ -1,5 +1,19 @@
 # Changelog / Journal des modifications
 
+## [1.1.4] - 2026-10-20
+
+### English
+
+- Quayline page: the local terminal (Quayline 1.11) is now described, with its keyboard
+  shortcut and its absence from the Flatpak; the Windows installation notes that it is
+  off by default.
+
+### Français
+
+- Page Quayline : le terminal local (Quayline 1.11) est désormais présenté, avec son
+  raccourci et son absence du Flatpak ; l'installation sous Windows précise qu'il est
+  désactivé par défaut.
+
 ## [1.1.3] - 2026-10-19
 
 ### English
