@@ -7,7 +7,18 @@
 	import CodeBlock from './CodeBlock.svelte';
 	import RichText from './RichText.svelte';
 
-	let { install, lang, idPrefix }: { install: AppContent['install']; lang: Lang; idPrefix: string } = $props();
+	let {
+		install,
+		lang,
+		idPrefix,
+		unavailable = []
+	}: {
+		install: AppContent['install'];
+		lang: Lang;
+		idPrefix: string;
+		/** Fichiers pas encore publiés : leurs onglets portent la mention « Bientôt disponible ». */
+		unavailable?: string[];
+	} = $props();
 	const d = $derived(t(lang));
 
 	// Sans JavaScript, toutes les sections s'affichent l'une sous l'autre.
@@ -63,6 +74,9 @@
 	>
 		{#if !enhanced}
 			<h3>{tab.label}</h3>
+		{/if}
+		{#if tab.fileId && unavailable.includes(tab.fileId)}
+			<p class="soon" role="note">{d.app.comingSoonInstall}</p>
 		{/if}
 		{#each tab.blocks as block, i (i)}
 			{#if block.type === 'code'}
@@ -122,6 +136,14 @@
 	}
 	[role='tabpanel'] + [role='tabpanel'] {
 		margin-top: 0;
+	}
+	.panel .soon {
+		padding: 14px 18px;
+		border-radius: 12px;
+		border: 1px dashed var(--line);
+		background: var(--surface);
+		color: var(--ink);
+		font-weight: 500;
 	}
 	.panel p {
 		margin: 0;

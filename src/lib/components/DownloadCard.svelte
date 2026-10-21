@@ -14,13 +14,15 @@
 	const content = $derived(app.content[lang]);
 
 	const osName: Record<Platform, string> = $derived({
-		linux: app.copr ? 'Linux (Fedora)' : d.os.linux,
+		linux: d.os.linux,
 		macos: d.os.macos,
 		windows: d.os.windows
 	});
-	const filesFor = (p: Platform) => release.files.filter((f) => f.platform === p);
+	// Fichiers publiés de chaque système ; ceux à venir n'apparaissent que parmi les boutons Linux.
+	const filesFor = (p: Platform) => release.files.filter((f) => f.platform === p && f.available);
+	const allFilesFor = (p: Platform) => release.files.filter((f) => f.platform === p);
 	const pictoOf = (id: string) => app.files.find((spec) => spec.id === id)?.picto;
-	const platforms = $derived([...new Set(release.files.map((f) => f.platform))]);
+	const platforms = $derived([...new Set(release.files.filter((f) => f.available).map((f) => f.platform))]);
 	const coprCommands = $derived(app.copr ? `sudo dnf copr enable ${app.copr}\nsudo dnf install ${app.slug}` : '');
 	const sizeOf = (bytes: number | null) => (bytes ? ` · ${formatSize(lang, bytes)}` : '');
 </script>
@@ -52,13 +54,21 @@
 					<CodeBlock code={coprCommands} copyLabel={d.app.copyCommands} copiedLabel={d.app.copied} wrap />
 					<p class="small">{d.app.coprNote} <code class="inline-code">dnf upgrade</code>.</p>
 					<div class="alt">
-						{#each filesFor('linux') as file (file.id)}
+						{#each allFilesFor('linux') as file (file.id)}
 							{@const picto = pictoOf(file.id)}
 							{@const Icon = picto ? icons[picto.icon] : null}
-							<a class="btn btn-secondary" href={file.url}>
-								{#if Icon && picto}<span class="tint-{picto.tint} file-icon"><Icon size={16} strokeWidth={1.8} aria-hidden="true" /></span>{/if}
-								{content.files[file.id]?.label ?? file.name}
-							</a>
+							{#if file.available}
+								<a class="btn btn-secondary" href={file.url}>
+									{#if Icon && picto}<span class="tint-{picto.tint} file-icon"><Icon size={16} strokeWidth={1.8} aria-hidden="true" /></span>{/if}
+									{content.files[file.id]?.label ?? file.name}
+								</a>
+							{:else}
+								<span class="btn btn-secondary soon">
+									{#if Icon && picto}<span class="file-icon"><Icon size={16} strokeWidth={1.8} aria-hidden="true" /></span>{/if}
+									{content.files[file.id]?.label ?? file.name}
+									<span class="soon-badge">{d.app.comingSoonShort}</span>
+								</span>
+							{/if}
 						{/each}
 					</div>
 					<p class="small">{d.app.manualNote}</p>
@@ -175,9 +185,10 @@
 		text-align: center;
 		overflow-wrap: anywhere;
 	}
+	/* Un paquet par ligne : les libellés (« Debian, Ubuntu (.deb) ») restent sur une ligne. */
 	.alt {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+		grid-template-columns: 1fr;
 		gap: 8px;
 	}
 	.alt .btn {
@@ -205,6 +216,22 @@
 		width: 100%;
 		justify-content: flex-start;
 		padding-left: 8px;
+	}
+	/* Paquet annoncé mais pas encore publié : bouton inactif. */
+	.soon {
+		cursor: default;
+		color: var(--subtle);
+		border-style: dashed;
+	}
+	.soon:hover {
+		border-color: var(--line);
+	}
+	.soon-badge {
+		padding: 1px 8px;
+		border-radius: 999px;
+		background: var(--chip);
+		font-size: 12px;
+		font-weight: 600;
 	}
 	.file-icon {
 		display: flex;

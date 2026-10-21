@@ -90,11 +90,17 @@
 										</span>
 									</th>
 									<td class="mono small">
-										{file.name}
-										{#if file.size}<span class="size">{formatSize(lang, file.size)}</span>{/if}
+										{#if file.available}
+											{file.name}
+											{#if file.size}<span class="size">{formatSize(lang, file.size)}</span>{/if}
+										{:else}
+											<span class="size">—</span>
+										{/if}
 									</td>
 									<td class="small">
-										{#if file.checksums.length > 0}
+										{#if !file.available}
+											<span class="size">—</span>
+										{:else if file.checksums.length > 0}
 											<ul class="sums">
 												{#each file.checksums as sum (sum.name)}
 													<li><a class="mono" href={sum.url}>{sum.name}</a></li>
@@ -105,10 +111,14 @@
 										{/if}
 									</td>
 									<td class="right">
-										<a class="btn btn-primary dl" href={file.url}>
-											<Download size={16} />
-											{d.downloads.download}<span class="visually-hidden">&nbsp;{file.name}</span>
-										</a>
+										{#if file.available}
+											<a class="btn btn-primary dl" href={file.url}>
+												<Download size={16} />
+												{d.downloads.download}<span class="visually-hidden">&nbsp;{file.name}</span>
+											</a>
+										{:else}
+											<span class="soon">{d.app.comingSoon}</span>
+										{/if}
 									</td>
 								</tr>
 							{/if}
@@ -370,6 +380,19 @@
 		.dl {
 			width: 100%;
 		}
+	}
+	/* Paquet annoncé mais pas encore publié. */
+	.soon {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		padding: 0 16px;
+		border-radius: 10px;
+		border: 1px dashed var(--line);
+		color: var(--muted);
+		font-size: 14px;
+		font-weight: 600;
+		white-space: nowrap;
 	}
 	.copr {
 		display: flex;

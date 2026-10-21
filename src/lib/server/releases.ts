@@ -71,7 +71,8 @@ export async function resolveRelease(app: AppDefinition): Promise<ResolvedReleas
 				name: asset.name,
 				url: asset.browser_download_url,
 				size: asset.size,
-				checksums
+				checksums,
+				available: true
 			};
 		}
 		const stableName = !/X\.Y\.Z/.test(spec.example);
@@ -81,7 +82,10 @@ export async function resolveRelease(app: AppDefinition): Promise<ResolvedReleas
 			name: spec.example,
 			url: stableName ? latestDownload(spec.example) : `${base}/latest`,
 			size: null,
-			checksums
+			checksums,
+			// Release lue sans ce fichier : il n'est pas encore publié. Release illisible : on
+			// suppose qu'il existe (liens vers la dernière release).
+			available: release === null
 		};
 	});
 

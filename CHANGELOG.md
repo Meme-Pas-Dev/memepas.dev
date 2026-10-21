@@ -1,5 +1,27 @@
 # Changelog / Journal des modifications
 
+## [1.2.0] - 2026-10-21
+
+### English
+
+- Quayline 1.12: new screenshots (deep blue dark theme, local terminal, terminal
+  settings); the carousel now has ten of them.
+- Debian and Ubuntu package (`.deb`) in the download card, the downloads page and a new
+  installation tab; as long as the latest release does not include it, it is shown as
+  “Coming soon”.
+- Linux download card: COPR is recommended for Fedora, and other distributions are
+  pointed to the `.deb` package or the Flatpak.
+
+### Français
+
+- Quayline 1.12 : nouvelles captures d'écran (thème sombre bleu nuit, terminal local,
+  réglages du terminal) ; le carrousel en compte désormais dix.
+- Paquet Debian et Ubuntu (`.deb`) dans la carte de téléchargement, la page des
+  téléchargements et un nouvel onglet d'installation ; tant que la dernière version ne
+  le contient pas, il est affiché « Bientôt disponible ».
+- Carte de téléchargement pour Linux : COPR est recommandé pour Fedora, les autres
+  distributions sont orientées vers le paquet `.deb` ou le Flatpak.
+
 ## [1.1.4] - 2026-10-20
 
 ### English

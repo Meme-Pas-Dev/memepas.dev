@@ -54,7 +54,8 @@ export interface AppContent {
 		modelLink: string;
 		reportLink: string;
 	};
-	install: { id: string; label: string; platform: Platform; icon: IconName; blocks: Block[] }[];
+	/** Onglets d'installation ; fileId : fichier de la release dont dépend l'onglet (mention « Bientôt disponible » s'il manque). */
+	install: { id: string; label: string; platform: Platform; icon: IconName; fileId?: string; blocks: Block[] }[];
 	privacy: string;
 	license: string;
 	screenshotAlt: string[];
@@ -100,6 +101,11 @@ export interface ResolvedFile {
 	/** Taille en octets, connue seulement si la release a pu être lue. */
 	size: number | null;
 	checksums: { name: string; url: string }[];
+	/**
+	 * Faux quand la dernière release a été lue mais ne contient pas encore ce fichier :
+	 * le site affiche alors « Bientôt disponible » à la place du lien.
+	 */
+	available: boolean;
 }
 
 export interface ResolvedRelease {

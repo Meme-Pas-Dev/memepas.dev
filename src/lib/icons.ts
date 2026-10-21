@@ -22,6 +22,7 @@ import Lock from '@lucide/svelte/icons/lock';
 import Mail from '@lucide/svelte/icons/mail';
 import Monitor from '@lucide/svelte/icons/monitor';
 import Package from '@lucide/svelte/icons/package';
+import PackageOpen from '@lucide/svelte/icons/package-open';
 import Pencil from '@lucide/svelte/icons/pencil';
 import Plus from '@lucide/svelte/icons/plus';
 import RectangleEllipsis from '@lucide/svelte/icons/rectangle-ellipsis';
@@ -61,6 +62,7 @@ export const icons = {
 	mail: Mail,
 	monitor: Monitor,
 	package: Package,
+	'package-open': PackageOpen,
 	pencil: Pencil,
 	plus: Plus,
 	'rectangle-ellipsis': RectangleEllipsis,

@@ -153,7 +153,12 @@
 	<div class="container block">
 		<p class="eyebrow">{d.app.installEyebrow}</p>
 		<h2 class="section-title install-title">{d.app.installTitle}</h2>
-		<InstallTabs install={c.install} {lang} idPrefix={app.slug} />
+		<InstallTabs
+			install={c.install}
+			{lang}
+			idPrefix={app.slug}
+			unavailable={data.release.files.filter((f) => !f.available).map((f) => f.id)}
+		/>
 	</div>
 </section>
 

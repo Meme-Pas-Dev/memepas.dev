@@ -4,6 +4,14 @@ import type { AppDefinition } from './types';
 
 const coprCommands = 'sudo dnf copr enable matt-mpd/quayline\nsudo dnf install quayline';
 
+const debCommands = [
+	'curl -fsSLO https://raw.githubusercontent.com/Meme-Pas-Dev/Quayline/main/packaging/signing-key.asc',
+	'gpg --dearmor < signing-key.asc > quayline.gpg',
+	'gpgv --keyring ./quayline.gpg SHA256SUMS.deb.asc SHA256SUMS.deb',
+	'sha256sum -c SHA256SUMS.deb',
+	'sudo apt install ./Quayline_*_amd64.deb'
+].join('\n');
+
 const rpmCommands = [
 	'curl -fsSLO https://raw.githubusercontent.com/Meme-Pas-Dev/Quayline/main/packaging/signing-key.asc',
 	'gpg --dearmor < signing-key.asc > quayline.gpg',
@@ -28,6 +36,14 @@ export const quayline: AppDefinition = {
 			example: 'Quayline-X.Y.Z-N.x86_64.rpm',
 			checksums: ['SHA256SUMS', 'SHA256SUMS.asc'],
 			picto: { icon: 'package', tint: 'sand' }
+		},
+		{
+			id: 'deb',
+			platform: 'linux',
+			pattern: /^Quayline_.+_amd64\.deb$/,
+			example: 'Quayline_X.Y.Z_amd64.deb',
+			checksums: ['SHA256SUMS.deb', 'SHA256SUMS.deb.asc'],
+			picto: { icon: 'package-open', tint: 'lilac' }
 		},
 		{
 			id: 'flatpak',
@@ -57,16 +73,18 @@ export const quayline: AppDefinition = {
 	// Nom écrit comme dans la barre latérale de l'application : Inter Variable, 700, −0,01 em.
 	nameClass: 'app-name-inter',
 	icon: '/apps/quayline/icon.svg',
-	// Captures du dépôt de développement (docs/medias), interface 1.10.0, données fictives.
+	// Captures du dépôt de développement (docs/medias), interface 1.12.0, données fictives.
 	screenshots: [
 		{ name: '01-hotes', width: 2560, height: 1600 },
 		{ name: '02-terminal', width: 2560, height: 1600 },
+		{ name: '11-terminal-local', width: 2560, height: 1600 },
 		{ name: '03-sftp', width: 2560, height: 1600 },
 		{ name: '04-editeur', width: 2560, height: 1600 },
 		{ name: '05-verrouillage', width: 2560, height: 1600 },
 		{ name: '08-reglages', width: 2560, height: 1600 },
 		{ name: '09-reglages-securite', width: 2560, height: 1600 },
-		{ name: '10-reglages-deverrouillage', width: 2560, height: 1600 }
+		{ name: '10-reglages-deverrouillage', width: 2560, height: 1600 },
+		{ name: '12-reglages-terminal', width: 2560, height: 1600 }
 	],
 	heroScreenshot: { light: '01-hotes', dark: '06-hotes-sombre' },
 	content: {
@@ -89,6 +107,7 @@ export const quayline: AppDefinition = {
 			],
 			files: {
 				rpm: { label: 'Fedora (RPM)', note: 'KDE Plasma et GNOME · x86_64 · sans mise à jour automatique' },
+				deb: { label: 'Debian, Ubuntu (.deb)', note: 'Debian 12+, Ubuntu 22.04+ · x86_64 · préversion, sans mise à jour automatique' },
 				flatpak: { label: 'Flatpak', note: 'Runtime GNOME de Flathub · sans mise à jour automatique' },
 				dmg: { label: 'macOS', note: 'Apple Silicon · signée et notarisée par Apple' },
 				exe: { label: 'Windows 11', note: 'x64 · préversion' }
@@ -197,6 +216,24 @@ export const quayline: AppDefinition = {
 					]
 				},
 				{
+					id: 'debian',
+					label: 'Debian, Ubuntu',
+					platform: 'linux',
+					icon: 'package-open',
+					fileId: 'deb',
+					blocks: [
+						{
+							type: 'p',
+							text: 'Paquet en préversion pour Debian 12 ou plus récent, Ubuntu 22.04 ou plus récent et leurs dérivées (Linux Mint, Pop!_OS…). Télécharger depuis la dernière release le paquet (`Quayline_X.Y.Z_amd64.deb`), `SHA256SUMS.deb` et `SHA256SUMS.deb.asc`, puis le vérifier et l’installer :'
+						},
+						{ type: 'code', code: debCommands },
+						{
+							type: 'p',
+							text: 'Il ne se met pas encore à jour tout seul : l’application annonce les nouvelles versions, à installer de la même façon (`apt` remplace l’ancienne version et garde le coffre). Le coffre est rangé dans `~/.local/share/dev.memepas.quayline/`.'
+						}
+					]
+				},
+				{
 					id: 'flatpak',
 					label: 'Flatpak',
 					platform: 'linux',
@@ -263,12 +300,14 @@ export const quayline: AppDefinition = {
 			screenshotAlt: [
 				'Liste des hôtes, rangés par groupes',
 				'Session SSH dans le terminal à onglets',
+				'Terminal local dans un onglet, à côté d’une session SSH',
 				'Explorateur SFTP en double panneau, avec la colonne des permissions',
 				'Éditeur intégré, avec coloration syntaxique d’un fichier YAML',
 				'Écran de verrouillage : mot de passe maître, clé de sécurité ou Pocket ID',
 				'Réglages généraux : apparence et mises à jour',
 				'Réglages de sécurité : verrouillage, presse-papiers et délai de reconnexion',
-				'Moyens de déverrouillage : clés de sécurité FIDO2 et Pocket ID'
+				'Moyens de déverrouillage : clés de sécurité FIDO2 et Pocket ID',
+				'Réglages du terminal : thème, taille de police et terminal local'
 			]
 		},
 		en: {
@@ -290,6 +329,7 @@ export const quayline: AppDefinition = {
 			],
 			files: {
 				rpm: { label: 'Fedora (RPM)', note: 'KDE Plasma and GNOME · x86_64 · no automatic updates' },
+				deb: { label: 'Debian, Ubuntu (.deb)', note: 'Debian 12+, Ubuntu 22.04+ · x86_64 · preview, no automatic updates' },
 				flatpak: { label: 'Flatpak', note: 'GNOME runtime from Flathub · no automatic updates' },
 				dmg: { label: 'macOS', note: 'Apple Silicon · signed and notarized by Apple' },
 				exe: { label: 'Windows 11', note: 'x64 · preview' }
@@ -398,6 +438,24 @@ export const quayline: AppDefinition = {
 					]
 				},
 				{
+					id: 'debian',
+					label: 'Debian, Ubuntu',
+					platform: 'linux',
+					icon: 'package-open',
+					fileId: 'deb',
+					blocks: [
+						{
+							type: 'p',
+							text: 'Preview package for Debian 12 or later, Ubuntu 22.04 or later and their derivatives (Linux Mint, Pop!_OS…). From the latest release, download the package (`Quayline_X.Y.Z_amd64.deb`), `SHA256SUMS.deb` and `SHA256SUMS.deb.asc`, then check and install it:'
+						},
+						{ type: 'code', code: debCommands },
+						{
+							type: 'p',
+							text: 'It is not updated automatically yet: the app announces new versions, to install the same way (`apt` replaces the previous version and keeps the vault). The vault is stored in `~/.local/share/dev.memepas.quayline/`.'
+						}
+					]
+				},
+				{
 					id: 'flatpak',
 					label: 'Flatpak',
 					platform: 'linux',
@@ -464,12 +522,14 @@ export const quayline: AppDefinition = {
 			screenshotAlt: [
 				'Host list, organised in groups',
 				'SSH session in the tabbed terminal',
+				'Local terminal in a tab, next to an SSH session',
 				'Dual-pane SFTP browser, with the permissions column',
 				'Built-in editor, with syntax highlighting for a YAML file',
 				'Lock screen: master password, security key or Pocket ID',
 				'General settings: appearance and updates',
 				'Security settings: lock, clipboard and sign-in grace period',
-				'Unlock methods: FIDO2 security keys and Pocket ID'
+				'Unlock methods: FIDO2 security keys and Pocket ID',
+				'Terminal settings: theme, font size and local terminal'
 			]
 		}
 	}
