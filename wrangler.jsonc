@@ -4,14 +4,15 @@
 	"main": "worker/index.ts",
 	"compatibility_date": "2025-09-01",
 	// Les pages sont des fichiers statiques (dossier build/ produit par SvelteKit).
-	// Le Worker n'intervient que pour la racine (choix de la langue) et /.well-known/ ;
+	// Le Worker n'intervient que pour la racine et /quayline (choix de la langue) et
+	// /.well-known/ ;
 	// tout le reste est servi directement.
 	"assets": {
 		"directory": "./build",
 		"binding": "ASSETS",
 		"html_handling": "auto-trailing-slash",
 		"not_found_handling": "404-page",
-		"run_worker_first": ["/", "/.well-known/*"]
+		"run_worker_first": ["/", "/quayline", "/quayline/", "/.well-known/*"]
 	},
 	// Pas de journalisation des requêtes.
 	"observability": { "enabled": false },

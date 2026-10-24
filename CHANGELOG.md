@@ -1,5 +1,19 @@
 # Changelog / Journal des modifications
 
+## [1.2.2] - 2026-10-24
+
+### English
+
+- Short address `memepas.dev/quayline`, redirected to the Quayline page in the browser's
+  language; `quayline.memepas.dev` leads there too, and also serves the
+  `apple-app-site-association` file used by Quayline on iPad.
+
+### Français
+
+- Adresse courte `memepas.dev/quayline`, redirigée vers la page Quayline dans la langue du
+  navigateur ; `quayline.memepas.dev` y mène aussi, et sert également le fichier
+  `apple-app-site-association` utilisé par Quayline sur iPad.
+
 ## [1.2.1] - 2026-10-24
 
 ### English

@@ -1,9 +1,11 @@
 // Worker de memepas.dev.
 //
 // Les pages du site sont des fichiers statiques servis directement par Cloudflare.
-// Ce Worker n'est appelé que pour la racine « / » et pour /.well-known/* (voir
-// run_worker_first dans wrangler.jsonc) :
-// - la racine redirige vers /fr/ ou /en/ selon la langue préférée du navigateur ;
+// Ce Worker n'est appelé que pour la racine « / », les adresses courtes des applications
+// (/quayline) et /.well-known/* (voir run_worker_first dans wrangler.jsonc) :
+// - la racine redirige vers /fr/ ou /en/ selon la langue préférée du navigateur, et
+//   /quayline vers /fr/quayline/ ou /en/quayline/ (cible du sous-domaine
+//   quayline.memepas.dev, redirigé par une règle Cloudflare) ;
 // - /.well-known/ sert le fichier de vérification Flathub tel quel et le fichier
 //   apple-app-site-association (clés FIDO2 de Quayline sur iPad).
 // Aucun cookie, aucun stockage : seule l'en-tête Accept-Language de la requête est lue.
@@ -15,6 +17,13 @@ interface Env {
 	/** Team ID Apple, fourni au déploiement (secret APPLE_TEAM_ID du dépôt public). */
 	APPLE_TEAM_ID?: string;
 }
+
+// Adresses redirigées vers la page de la langue préférée : chemin → page sous /<langue>/.
+const LANG_REDIRECTS: Record<string, string> = {
+	'/': '',
+	'/quayline': 'quayline/',
+	'/quayline/': 'quayline/'
+};
 
 const SECURITY_HEADERS = {
 	'X-Content-Type-Options': 'nosniff',
@@ -71,9 +80,9 @@ export default {
 		const url = new URL(request.url);
 		const { pathname } = url;
 
-		if (pathname === '/') {
+		if (pathname in LANG_REDIRECTS) {
 			const lang = preferredLang(request.headers.get('Accept-Language'));
-			const target = new URL(`/${lang}/`, url);
+			const target = new URL(`/${lang}/${LANG_REDIRECTS[pathname]}`, url);
 			target.search = url.search;
 			return new Response(null, {
 				status: 302,
