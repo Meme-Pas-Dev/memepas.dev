@@ -1,5 +1,19 @@
 # Changelog / Journal des modifications
 
+## [1.2.1] - 2026-10-24
+
+### English
+
+- `/.well-known/apple-app-site-association` file: associates memepas.dev with Quayline
+  (`webcredentials`), for security keys on iPad. The Apple Team ID is supplied at
+  deployment time, not stored in the code.
+
+### Français
+
+- Fichier `/.well-known/apple-app-site-association` : associe memepas.dev à Quayline
+  (`webcredentials`), pour les clés de sécurité sur iPad. Le Team ID Apple est fourni au
+  déploiement, il n'est pas dans le code.
+
 ## [1.2.0] - 2026-10-21
 
 ### English

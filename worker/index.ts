@@ -4,13 +4,16 @@
 // Ce Worker n'est appelé que pour la racine « / » et pour /.well-known/* (voir
 // run_worker_first dans wrangler.jsonc) :
 // - la racine redirige vers /fr/ ou /en/ selon la langue préférée du navigateur ;
-// - /.well-known/ sert le fichier de vérification Flathub tel quel.
+// - /.well-known/ sert le fichier de vérification Flathub tel quel et le fichier
+//   apple-app-site-association (clés FIDO2 de Quayline sur iPad).
 // Aucun cookie, aucun stockage : seule l'en-tête Accept-Language de la requête est lue.
 
 import flathubVerifiedApps from './well-known/org.flathub.VerifiedApps.txt';
 
 interface Env {
 	ASSETS: { fetch(request: Request): Promise<Response> };
+	/** Team ID Apple, fourni au déploiement (secret APPLE_TEAM_ID du dépôt public). */
+	APPLE_TEAM_ID?: string;
 }
 
 const SECURITY_HEADERS = {
@@ -19,10 +22,28 @@ const SECURITY_HEADERS = {
 	'Strict-Transport-Security': 'max-age=31536000'
 };
 
-// Fichiers servis en texte brut, sans aucune transformation.
-const WELL_KNOWN: Record<string, string> = {
-	'/.well-known/org.flathub.VerifiedApps.txt': flathubVerifiedApps
+// Fichiers servis tels quels. Un fichier vide répond 404.
+const WELL_KNOWN: Record<string, (env: Env) => { body: string; type: string }> = {
+	'/.well-known/org.flathub.VerifiedApps.txt': () => ({
+		body: flathubVerifiedApps,
+		type: 'text/plain; charset=utf-8'
+	}),
+	'/.well-known/apple-app-site-association': appleAppSiteAssociation
 };
+
+/**
+ * Association du domaine avec Quayline, lue par Apple (sans redirection, en
+ * application/json) : memepas.dev peut alors servir de rpId aux clés FIDO2 sur iPad.
+ * Le Team ID n'est pas dans le code : il est fourni au déploiement. Sans lui (ou s'il
+ * n'a pas la forme attendue, dix lettres majuscules ou chiffres), l'adresse répond 404.
+ */
+function appleAppSiteAssociation(env: Env): { body: string; type: string } {
+	const teamId = env.APPLE_TEAM_ID?.trim() ?? '';
+	const body = /^[A-Z0-9]{10}$/.test(teamId)
+		? JSON.stringify({ webcredentials: { apps: [`${teamId}.dev.memepas.quayline`] } })
+		: '';
+	return { body, type: 'application/json' };
+}
 
 /**
  * Langue du site pour un en-tête Accept-Language : le français si la langue préférée
@@ -68,7 +89,7 @@ export default {
 		}
 
 		if (pathname in WELL_KNOWN) {
-			const body = WELL_KNOWN[pathname];
+			const { body, type } = WELL_KNOWN[pathname](env);
 			if (body.trim() === '') {
 				return new Response('Not Found\n', {
 					status: 404,
@@ -81,7 +102,7 @@ export default {
 			return new Response(request.method === 'HEAD' ? null : body, {
 				status: 200,
 				headers: {
-					'Content-Type': 'text/plain; charset=utf-8',
+					'Content-Type': type,
 					'Cache-Control': 'public, max-age=300',
 					...SECURITY_HEADERS
 				}

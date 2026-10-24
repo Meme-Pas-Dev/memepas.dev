@@ -60,8 +60,14 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: npm ci --ignore-scripts
+      # Le Team ID Apple (fichier apple-app-site-association) reste hors du dépôt : il est
+      # passé au Worker comme variable. Sans le secret, l'adresse répond 404.
       - name: Déploiement sur Cloudflare
-        run: npx wrangler deploy
+        run: |
+          args=()
+          if [ -n "$APPLE_TEAM_ID" ]; then args+=(--var "APPLE_TEAM_ID:$APPLE_TEAM_ID"); fi
+          npx wrangler deploy "${args[@]}"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
