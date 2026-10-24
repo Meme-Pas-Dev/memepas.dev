@@ -1,5 +1,19 @@
 # Changelog / Journal des modifications
 
+## [1.2.3] - 2026-10-24
+
+### English
+
+- One `apple-app-site-association` file per application, on its own subdomain:
+  `quayline.memepas.dev` only declares Quayline, and its root leads to the Quayline page.
+  The memepas.dev file is kept until Quayline no longer uses it.
+
+### Français
+
+- Un fichier `apple-app-site-association` par application, sur son propre sous-domaine :
+  `quayline.memepas.dev` ne déclare que Quayline, et sa racine mène à la page Quayline. Le
+  fichier de memepas.dev est conservé jusqu'à ce que Quayline ne l'utilise plus.
+
 ## [1.2.2] - 2026-10-24
 
 ### English

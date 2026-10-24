@@ -6,8 +6,9 @@
 // - la racine redirige vers /fr/ ou /en/ selon la langue préférée du navigateur, et
 //   /quayline vers /fr/quayline/ ou /en/quayline/ (cible du sous-domaine
 //   quayline.memepas.dev, redirigé par une règle Cloudflare) ;
-// - /.well-known/ sert le fichier de vérification Flathub tel quel et le fichier
-//   apple-app-site-association (clés FIDO2 de Quayline sur iPad).
+// - /.well-known/ sert, selon le domaine, le fichier de vérification Flathub (site) et
+//   le fichier apple-app-site-association propre à chaque application, sur son
+//   sous-domaine (quayline.memepas.dev : clés FIDO2 de Quayline sur iPad).
 // Aucun cookie, aucun stockage : seule l'en-tête Accept-Language de la requête est lue.
 
 import flathubVerifiedApps from './well-known/org.flathub.VerifiedApps.txt';
@@ -31,25 +32,50 @@ const SECURITY_HEADERS = {
 	'Strict-Transport-Security': 'max-age=31536000'
 };
 
-// Fichiers servis tels quels. Un fichier vide répond 404.
-const WELL_KNOWN: Record<string, (env: Env) => { body: string; type: string }> = {
+type WellKnownFile = (env: Env) => { body: string; type: string };
+
+// Sous-domaine de chaque application : page de l'application (sous /<langue>/) et
+// identifiant de son bundle Apple. Chaque sous-domaine sert son propre fichier
+// apple-app-site-association, qui ne déclare que cette application ; sa racine mène à la
+// page de l'application sur memepas.dev, et une règle Cloudflare y envoie aussi ses
+// autres adresses.
+const SITE_ORIGIN = 'https://memepas.dev';
+const APP_DOMAINS: Record<string, { page: string; bundleId: string }> = {
+	'quayline.memepas.dev': { page: 'quayline/', bundleId: 'dev.memepas.quayline' }
+};
+
+// Fichier provisoire de memepas.dev, utilisé par Quayline avant son passage à
+// quayline.memepas.dev : à retirer quand Quayline n'en dépendra plus.
+const SITE_APPLE_APPS = ['dev.memepas.quayline'];
+
+// Fichiers du site (memepas.dev). Un fichier vide répond 404.
+const SITE_WELL_KNOWN: Record<string, WellKnownFile> = {
 	'/.well-known/org.flathub.VerifiedApps.txt': () => ({
 		body: flathubVerifiedApps,
 		type: 'text/plain; charset=utf-8'
 	}),
-	'/.well-known/apple-app-site-association': appleAppSiteAssociation
+	'/.well-known/apple-app-site-association': (env) => appleAppSiteAssociation(env, SITE_APPLE_APPS)
 };
 
+/** Fichiers /.well-known/ servis sur un domaine. */
+function wellKnownFiles(hostname: string): Record<string, WellKnownFile> {
+	if (!Object.hasOwn(APP_DOMAINS, hostname)) return SITE_WELL_KNOWN;
+	const { bundleId } = APP_DOMAINS[hostname];
+	return {
+		'/.well-known/apple-app-site-association': (env) => appleAppSiteAssociation(env, [bundleId])
+	};
+}
+
 /**
- * Association du domaine avec Quayline, lue par Apple (sans redirection, en
- * application/json) : memepas.dev peut alors servir de rpId aux clés FIDO2 sur iPad.
+ * Association d'un domaine avec des applications, lue par Apple (sans redirection, en
+ * application/json) : le domaine peut alors servir de rpId à leurs clés FIDO2 sur iPad.
  * Le Team ID n'est pas dans le code : il est fourni au déploiement. Sans lui (ou s'il
  * n'a pas la forme attendue, dix lettres majuscules ou chiffres), l'adresse répond 404.
  */
-function appleAppSiteAssociation(env: Env): { body: string; type: string } {
+function appleAppSiteAssociation(env: Env, bundleIds: string[]): { body: string; type: string } {
 	const teamId = env.APPLE_TEAM_ID?.trim() ?? '';
 	const body = /^[A-Z0-9]{10}$/.test(teamId)
-		? JSON.stringify({ webcredentials: { apps: [`${teamId}.dev.memepas.quayline`] } })
+		? JSON.stringify({ webcredentials: { apps: bundleIds.map((id) => `${teamId}.${id}`) } })
 		: '';
 	return { body, type: 'application/json' };
 }
@@ -82,7 +108,10 @@ export default {
 
 		if (pathname in LANG_REDIRECTS) {
 			const lang = preferredLang(request.headers.get('Accept-Language'));
-			const target = new URL(`/${lang}/${LANG_REDIRECTS[pathname]}`, url);
+			// Sur le sous-domaine d'une application : sa page, sur memepas.dev.
+			const target = Object.hasOwn(APP_DOMAINS, url.hostname)
+				? new URL(`/${lang}/${APP_DOMAINS[url.hostname].page}`, SITE_ORIGIN)
+				: new URL(`/${lang}/${LANG_REDIRECTS[pathname]}`, url);
 			target.search = url.search;
 			return new Response(null, {
 				status: 302,
@@ -97,8 +126,9 @@ export default {
 			});
 		}
 
-		if (pathname in WELL_KNOWN) {
-			const { body, type } = WELL_KNOWN[pathname](env);
+		const wellKnown = wellKnownFiles(url.hostname);
+		if (Object.hasOwn(wellKnown, pathname)) {
+			const { body, type } = wellKnown[pathname](env);
 			if (body.trim() === '') {
 				return new Response('Not Found\n', {
 					status: 404,
